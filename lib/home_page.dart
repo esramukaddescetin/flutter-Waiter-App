@@ -73,7 +73,7 @@ class HomePage extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/loginPage');
+                  Navigator.pushNamed(context, '/adminLoginPage');
                 },
                 child: ButtonEntry(giris: 'Admin Girişi'),
               ),

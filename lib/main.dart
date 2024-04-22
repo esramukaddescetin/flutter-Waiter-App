@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'admin_login.dart';
 import 'home_page.dart';
 import 'login_page.dart';
 
@@ -16,6 +17,7 @@ class WaiterApp extends StatelessWidget {
         '/': (context) => HomePage(),
         '/homePage': (context) => HomePage(),
         '/loginPage': (context) => LoginPage(),
+        '/adminLoginPage': (context) => AdminLoginPage(),
       },
     );
   }
