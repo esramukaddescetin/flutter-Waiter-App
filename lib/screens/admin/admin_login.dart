@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../my_widgets.dart';
+import '../../../my_widgets.dart';
 
 class AdminLogin extends StatefulWidget {
   @override
