@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../my_widgets.dart';
+import '../../my_widgets.dart';
 
-class AdminLoginPage extends StatefulWidget {
+class AdminLogin extends StatefulWidget {
   @override
-  _StaffLoginPageState createState() => _StaffLoginPageState();
+  _AdminLoginPageState createState() => _AdminLoginPageState();
 }
 
-class _StaffLoginPageState extends State<AdminLoginPage> {
+class _AdminLoginPageState extends State<AdminLogin> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -18,8 +18,8 @@ class _StaffLoginPageState extends State<AdminLoginPage> {
         children: [
           Container(
             decoration: WidgetBackcolor(
+              Colors.grey,
               Colors.green,
-              Colors.white60,
             ),
             child: Padding(
               padding: EdgeInsets.all(20.0),
@@ -60,7 +60,9 @@ class _StaffLoginPageState extends State<AdminLoginPage> {
                       elevation: 12,
                       backgroundColor: Colors.green,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/dashboardScreen');
+                    },
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 40),
                       child: Text(
@@ -87,6 +89,6 @@ void main() {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     title: 'Personel Girişi',
-    home: AdminLoginPage(),
+    home: AdminLogin(),
   ));
 }

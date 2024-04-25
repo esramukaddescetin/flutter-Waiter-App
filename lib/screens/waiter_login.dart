@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../my_widgets.dart';
+import '../../my_widgets.dart';
 
-class LoginPage extends StatefulWidget {
+class WaiterLogin extends StatefulWidget {
   @override
   _StaffLoginPageState createState() => _StaffLoginPageState();
 }
 
-class _StaffLoginPageState extends State<LoginPage> {
+class _StaffLoginPageState extends State<WaiterLogin> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -60,7 +60,9 @@ class _StaffLoginPageState extends State<LoginPage> {
                       elevation: 12,
                       backgroundColor: Colors.green,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/tablesScreen');
+                    },
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 40),
                       child: Text(
@@ -87,6 +89,6 @@ void main() {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     title: 'Personel Girişi',
-    home: LoginPage(),
+    home: WaiterLogin(),
   ));
 }

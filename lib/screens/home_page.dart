@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../my_widgets.dart';
+import '../../my_widgets.dart';
 
 class HomePage extends StatelessWidget {
   static String routeName = '/homePage';
@@ -15,8 +15,8 @@ class HomePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Container(
-                width: 320, // Genişlik
-                height: 260, // Yükseklik
+                width: 320,
+                height: 260,
                 decoration: BoxDecoration(
                   color: Colors.green[200], // Arka plan rengi
                   borderRadius: BorderRadius.circular(10), // Köşe yarıçapı
@@ -26,8 +26,8 @@ class HomePage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10), // Köşe yarıçapı
                     child: Image.asset(
                       'assets/images/waiter.png',
-                      width: 310, // Resmin genişliği
-                      height: 240, // Resmin yüksekliği
+                      width: 310,
+                      height: 240,
                       fit: BoxFit.cover, // Resmin boyutlandırma şekli
                     ),
                   ),
@@ -67,13 +67,13 @@ class HomePage extends StatelessWidget {
               SizedBox(height: 10),
               TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/loginPage');
+                  Navigator.pushNamed(context, '/waiterLogin');
                 },
                 child: ButtonEntry(giris: 'Garson Girişi'),
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/adminLoginPage');
+                  Navigator.pushNamed(context, '/adminLogin');
                 },
                 child: ButtonEntry(giris: 'Admin Girişi'),
               ),
