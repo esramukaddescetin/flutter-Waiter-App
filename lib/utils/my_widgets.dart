@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 class ButtonEntry extends StatelessWidget {
   final String giris;
   const ButtonEntry({required this.giris});
+
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Text(
         giris,
         style: TextStyle(
-          color: Colors.green,
+          color: Colors.brown,
           fontSize: 20,
           fontFamily: 'MadimiOne',
 
@@ -20,7 +21,7 @@ class ButtonEntry extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: Colors.green,
+            color: Colors.brown,
             width: 2,
           ),
         ),
@@ -42,7 +43,7 @@ class CardEntry extends StatelessWidget {
       margin: EdgeInsets.symmetric(
         horizontal: 45,
       ),
-      color: Colors.green[500],
+      color: Colors.brown[500],
       child: ListTile(
         leading: Icon(
           icon,
@@ -93,6 +94,25 @@ BoxDecoration WidgetBackcolor(Color color1, Color color2) {
         color1,
         color2,
       ],
+    ),
+  );
+}
+
+//InputDecorationların ortak görünümü (payment_page, resevation_page)
+InputDecoration buildInputDecoration(
+  String label,
+  String hint,
+) {
+  return InputDecoration(
+    labelText: label,
+    hintText: hint,
+    hintStyle: TextStyle(
+      color: Colors.white,
+    ),
+    labelStyle: TextStyle(color: Colors.white), // Metin rengi
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: BorderSide(color: Colors.white), // Çerçeve rengi
     ),
   );
 }
