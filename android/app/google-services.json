@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "210214440308",
+    "project_id": "restaurant-app-flutter-27343",
+    "storage_bucket": "restaurant-app-flutter-27343.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:210214440308:android:d92f7140aaf12a324ab021",
+        "android_client_info": {
+          "package_name": "com.example.restaurant_app_2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcTrVR0sqSiutnOYfrWFBJtB0MVOhVnzo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:210214440308:android:f11fb4b35cd093914ab021",
+        "android_client_info": {
+          "package_name": "com.waiter.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcTrVR0sqSiutnOYfrWFBJtB0MVOhVnzo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
