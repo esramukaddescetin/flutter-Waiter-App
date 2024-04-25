@@ -78,13 +78,6 @@ class HomePage extends StatelessWidget {
                 },
                 child: ButtonEntry(giris: 'Admin Girişi'),
               ),
-              SizedBox(height: 10),
-              TextButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/register');
-                },
-                child: ButtonEntry(giris: 'Kaydol'),
-              ),
             ],
           ),
         ),

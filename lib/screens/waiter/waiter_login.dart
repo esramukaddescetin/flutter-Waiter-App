@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../my_widgets.dart';
+import '../../../my_widgets.dart';
+import '../../services/auth_service.dart';
+import '../../utils/locator.dart';
 
 class WaiterLogin extends StatefulWidget {
   @override
@@ -8,7 +10,7 @@ class WaiterLogin extends StatefulWidget {
 }
 
 class _StaffLoginPageState extends State<WaiterLogin> {
-  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   @override
@@ -28,7 +30,7 @@ class _StaffLoginPageState extends State<WaiterLogin> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    'Garson Girişi',
+                    'Giriş',
                     style: TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.bold,
@@ -37,9 +39,9 @@ class _StaffLoginPageState extends State<WaiterLogin> {
                   ),
                   SizedBox(height: 20.0),
                   TextField(
-                    controller: _usernameController,
+                    controller: _emailController,
                     decoration: InputDecoration(
-                      labelText: 'Kullanıcı Adı',
+                      labelText: 'Email',
                       prefixIcon: Icon(Icons.person, color: Colors.white),
                       labelStyle: TextStyle(color: Colors.white),
                     ),
@@ -61,7 +63,19 @@ class _StaffLoginPageState extends State<WaiterLogin> {
                       backgroundColor: Colors.green,
                     ),
                     onPressed: () {
-                      Navigator.pushNamed(context, '/tablesScreen');
+                      String email = _emailController.text.trim();
+                      String password = _passwordController.text.trim();
+
+                      // E-posta ve şifre boş mu kontrol edilir
+                      if (email.isEmpty || password.isEmpty) {
+                        // Eğer boşluk kaldırılmış e-posta ve şifre boşsa, hata mesajı gösterilir
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text('Please enter email and password.'),
+                        ));
+                      } else {
+                        // E-posta ve şifre boş değilse, giriş yapma işlemi başlatılır
+                        locator.get<AuthService>().waiterSignIn(context, email, password);
+                      }
                     },
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 40),

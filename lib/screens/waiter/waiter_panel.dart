@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(Tables());
+  runApp(WaiterPanel());
 }
 
-class Tables extends StatelessWidget {
+class WaiterPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

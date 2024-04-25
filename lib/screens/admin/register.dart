@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../my_widgets.dart';
-import '../phone_input_formatter.dart';
-import '../services/auth_service.dart';
-import '../utils/locator.dart';
+import '/my_widgets.dart';
+import '/phone_input_formatter.dart';
+import '/services/auth_service.dart';
+import '/utils/locator.dart';
 
 void main() {
   runApp(MyApp());
@@ -32,6 +32,9 @@ class RegisterScreen extends StatelessWidget {
   final _tEmail = TextEditingController();
   final _tPhone = TextEditingController();
   final _tPassword = TextEditingController();
+
+  String _selectedRole = 'User';
+
   Widget inputField(TextEditingController controller, icon, String text) {
     return TextFormField(
       controller: controller,
@@ -130,19 +133,42 @@ class RegisterScreen extends StatelessWidget {
                     Icons.lock,
                     'Password',
                   ),
+                  SizedBox(height: 10),
+                  DropdownButtonFormField<String>(
+                    value: _selectedRole,
+                    onChanged: (String? newValue) {
+                      _selectedRole = newValue!;
+                    },
+                    items:
+                        <String>['Admin', 'User', 'Waiter'].map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.person),
+                      hintText: 'Select Role',
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                  ),
                   SizedBox(height: 20),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        locator.get<AuthService>().signUp(context,
+                        locator.get<AuthService>().signUp(
+                            roles: [_selectedRole],
                             name: _tName.text,
                             lastname: _tLastName.text,
                             email: _tEmail.text,
                             // phone: int.parse(_tPhone.text),
                             phone: _tPhone.text,
                             password: _tPassword.text);
-                        //   Navigator.pushNamed(context, '/tableNumberPage');
                       },
                       child: Text('SIGN UP',
                           style: TextStyle(color: Colors.white)),
@@ -154,19 +180,6 @@ class RegisterScreen extends StatelessWidget {
                         backgroundColor: Colors.brown[500],
                       ),
                     ),
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("Already have an account?"),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text('Login'),
-                      ),
-                    ],
                   ),
                 ],
               ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:waiter_app/screens/admin/register.dart';
 import './menu_management.dart'; // Menu yönetimi ekranının import edilmesi
 
 class AdminDashboard extends StatelessWidget {
@@ -33,6 +34,16 @@ class AdminDashboard extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => MenuManagementScreen()), // Menu yönetimi ekranına geçiş
+                );
+              },
+            ),
+            ListTile(
+              title: Text('Kullanici Kaydet'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => RegisterScreen()), // Menu yönetimi ekranına geçiş
                 );
               },
             ),
