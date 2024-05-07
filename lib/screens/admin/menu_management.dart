@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -13,6 +14,7 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   File? _image;
+  String? _selectedCategory;
 
   Future<void> _getImage() async {
     final picker = ImagePicker();
@@ -25,6 +27,26 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
         print('No image selected.');
       }
     });
+  }
+
+  Future<void> _uploadImage() async {
+    if (_image == null) {
+      print('No image selected.');
+      return;
+    }
+
+    try {
+      final String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+      final firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance.ref().child('images/$fileName');
+      await ref.putFile(_image!);
+
+      final String imageUrl = await ref.getDownloadURL();
+      print('Image uploaded. URL: $imageUrl');
+
+      _addMenuItem(imageUrl);
+    } catch (e) {
+      print('Error uploading image: $e');
+    }
   }
 
   @override
@@ -53,6 +75,24 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
                 : Placeholder(
                     fallbackHeight: 200,
                   ),
+            DropdownButtonFormField<String>(
+              value: _selectedCategory,
+              onChanged: (String? value) {
+                setState(() {
+                  _selectedCategory = value;
+                });
+              },
+              items: <String>['Anayemek', 'Corba', 'Tatli', 'Salata'] // Örnek kategoriler
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              decoration: InputDecoration(
+                labelText: 'Category',
+              ),
+            ),
             TextField(
               controller: _ingredientsController,
               decoration: InputDecoration(labelText: 'Ingredients (comma separated)'),
@@ -68,7 +108,7 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
             SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
-                _addMenuItem();
+                _uploadImage();
               },
               child: Text('Add Menu Item'),
             ),
@@ -78,21 +118,13 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
     );
   }
 
-  void _addMenuItem() {
-    String? imageUrl;
-    if (_image != null) {
-      // Firebase Storage'a görüntüyü yükleme ve URL alımı
-      // Bu kısmı Firebase Storage kullanımına göre güncellemelisiniz.
-      // Bu örnek sadece bir URL döndürüyor.
-      imageUrl = 'https://example.com/image.jpg';
-    }
-
+  void _addMenuItem(String imageUrl) {
     List<String> ingredients = _ingredientsController.text.split(',');
     String name = _nameController.text;
     double price = double.tryParse(_priceController.text) ?? 0.0;
 
-    if (ingredients.isNotEmpty && name.isNotEmpty && price > 0) {
-      FirebaseFirestore.instance.collection('menu').add({
+    if (_selectedCategory != null && ingredients.isNotEmpty && name.isNotEmpty && price > 0) {
+      FirebaseFirestore.instance.collection('menu').doc(_selectedCategory).collection('items').add({
         'imageUrl': imageUrl,
         'ingredients': ingredients,
         'name': name,
@@ -172,5 +204,9 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
     _ingredientsController.clear();
     _nameController.clear();
     _priceController.clear();
+    setState(() {
+      _image = null;
+      _selectedCategory = null;
+    });
   }
 }
