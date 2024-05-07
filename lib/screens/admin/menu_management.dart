@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class MenuManagementScreen extends StatefulWidget {
   @override
@@ -25,6 +26,21 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
         print('No image selected.');
       }
     });
+  }
+
+  Widget inputField(TextEditingController controller, icon, String text) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        prefixIcon: Icon(icon),
+        labelText: text,
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
+    );
   }
 
   @override
@@ -53,14 +69,21 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
                 : Placeholder(
                     fallbackHeight: 200,
                   ),
+            SizedBox(height: 16.0),
+            inputField(_ingredientsController, Icons.food_bank,
+                'Ingredients (comma separated)'),
+            SizedBox(height: 16.0),
             TextField(
               controller: _ingredientsController,
-              decoration: InputDecoration(labelText: 'Ingredients (comma separated)'),
+              decoration:
+                  InputDecoration(labelText: 'Ingredients (comma separated)'),
             ),
+            SizedBox(height: 16.0),
             TextField(
               controller: _nameController,
               decoration: InputDecoration(labelText: 'Name'),
             ),
+            SizedBox(height: 16.0),
             TextField(
               controller: _priceController,
               decoration: InputDecoration(labelText: 'Price'),

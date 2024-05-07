@@ -56,7 +56,7 @@ class RegisterScreen extends StatelessWidget {
       backgroundColor: Colors.grey[200],
       body: Container(
         decoration: WidgetBackcolor(
-          Colors.brown,
+          Colors.green,
           Colors.grey,
         ),
         child: Center(
