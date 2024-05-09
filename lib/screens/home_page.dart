@@ -18,17 +18,17 @@ class HomePage extends StatelessWidget {
                 width: 320,
                 height: 260,
                 decoration: BoxDecoration(
-                  color: Colors.green[200], // Arka plan rengi
-                  borderRadius: BorderRadius.circular(10), // Köşe yarıçapı
+                  color: Colors.green[200],
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: Center(
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10), // Köşe yarıçapı
+                    borderRadius: BorderRadius.circular(10),
                     child: Image.asset(
                       'assets/images/waiter.png',
                       width: 310,
                       height: 240,
-                      fit: BoxFit.cover, // Resmin boyutlandırma şekli
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),

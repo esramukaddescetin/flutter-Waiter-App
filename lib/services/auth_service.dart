@@ -1,10 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:waiter_app/screens/admin/dashboard_screen.dart';
-import 'package:waiter_app/screens/user/entry_table_no.dart';
 import 'package:waiter_app/screens/waiter/waiter_panel.dart';
 
 class AuthService {

@@ -53,10 +53,19 @@ class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.lightGreen,
+        title: Text(
+          'Member Management',
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+      ),
       backgroundColor: Colors.grey[200],
       body: Container(
         decoration: WidgetBackcolor(
-          Colors.green,
+          Colors.lightGreen,
           Colors.grey,
         ),
         child: Center(
@@ -68,12 +77,12 @@ class RegisterScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(40), // Köşe yarıçapı
+                    borderRadius: BorderRadius.circular(40),
                     child: Image.asset(
                       'assets/images/restaurant.png',
                       width: 200,
                       height: 120,
-                      fit: BoxFit.cover, // Resmin boyutlandırma şekli
+                      fit: BoxFit.cover,
                     ),
                   ),
                   SizedBox(height: 20),
@@ -82,18 +91,6 @@ class RegisterScreen extends StatelessWidget {
                     Icons.person,
                     'First Name',
                   ),
-                  /*   TextFormField(
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.person),
-                      hintText: 'First Name',
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                  ),
-*/
                   SizedBox(height: 10),
                   inputField(
                     _tLastName,
@@ -177,7 +174,7 @@ class RegisterScreen extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
-                        backgroundColor: Colors.brown[500],
+                        backgroundColor: Colors.lightGreen[700],
                       ),
                     ),
                   ),

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:waiter_app/screens/admin/menu_management.dart';
 import 'package:waiter_app/screens/admin/register.dart';
-import 'package:waiter_app/screens/user/entry_table_no.dart';
 import 'package:waiter_app/screens/waiter/waiter_panel.dart';
 import 'package:waiter_app/services/provider/auth_provider.dart';
 
@@ -39,13 +38,12 @@ class WaiterApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
-        '/': (context) => MenuManagementScreen(),
+        '/': (context) => HomePage(),
         '/homePage': (context) => HomePage(),
         '/waiterLogin': (context) => WaiterLogin(),
         '/adminLogin': (context) => AdminLogin(),
         '/waiterPanel': (context) => WaiterPanel(),
         '/dashboardScreen': (context) => AdminDashboard(),
-        '/tableNumberPage': (context) => TableNumberPage(),
         '/register': (context) => RegisterScreen(),
         '/menuManagementScreen': (context) => MenuManagementScreen(),
       },
