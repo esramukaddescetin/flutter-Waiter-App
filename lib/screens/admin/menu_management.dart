@@ -53,10 +53,10 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Menu Management'),
+        title: const Text('Menu Management'),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -64,15 +64,15 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
               onPressed: () {
                 _getImage();
               },
-              child: Text('Select Image'),
+              child: const Text('Select Image'),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             _image != null
                 ? Image.file(
                     _image!,
                     height: 200,
                   )
-                : Placeholder(
+                : const Placeholder(
                     fallbackHeight: 200,
                   ),
             DropdownButtonFormField<String>(
@@ -82,35 +82,35 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
                   _selectedCategory = value;
                 });
               },
-              items: <String>['Anayemek', 'Corba', 'Tatli', 'Salata'] // Örnek kategoriler
+              items: <String>['Anayemek', 'Corba', 'Tatli', 'Salata', 'Arasicak'] 
                   .map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(value),
                 );
               }).toList(),
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Category',
               ),
             ),
             TextField(
-              controller: _ingredientsController,
-              decoration: InputDecoration(labelText: 'Ingredients (comma separated)'),
+              controller: _ingredientsController,  
+              decoration: const InputDecoration(labelText: 'Ingredients (comma separated)'),
             ),
             TextField(
               controller: _nameController,
-              decoration: InputDecoration(labelText: 'Name'),
+              decoration: const InputDecoration(labelText: 'Name'),
             ),
             TextField(
               controller: _priceController,
-              decoration: InputDecoration(labelText: 'Price'),
+              decoration: const InputDecoration(labelText: 'Price'),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
                 _uploadImage();
               },
-              child: Text('Add Menu Item'),
+              child: const Text('Add Menu Item'),
             ),
           ],
         ),
@@ -124,7 +124,7 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
     double price = double.tryParse(_priceController.text) ?? 0.0;
 
     if (_selectedCategory != null && ingredients.isNotEmpty && name.isNotEmpty && price > 0) {
-      FirebaseFirestore.instance.collection('menu').doc(_selectedCategory).collection('items').add({
+      FirebaseFirestore.instance.collection('menu').doc(_selectedCategory).collection('items').doc(name).set({
         'imageUrl': imageUrl,
         'ingredients': ingredients,
         'name': name,
@@ -145,14 +145,14 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Success'),
-          content: Text('Menu item added successfully.'),
+          title: const Text('Success'),
+          content: const Text('Menu item added successfully.'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
@@ -165,14 +165,14 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Error'),
-          content: Text('An error occurred. Please try again later.'),
+          title: const Text('Error'),
+          content: const Text('An error occurred. Please try again later.'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
@@ -185,14 +185,14 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Validation Error'),
-          content: Text('Please fill all fields correctly.'),
+          title: const Text('Validation Error'),
+          content: const Text('Please fill all fields correctly.'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
