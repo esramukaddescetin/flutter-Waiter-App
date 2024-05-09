@@ -157,7 +157,7 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
                     items: <String>[
                       'Çorba',
                       'Ana yemek',
-                      'Ana Sıcak',
+                      'Ara Sıcak',
                       'Tatlı',
                       'Atıştırmalıklar'
                     ].map<DropdownMenuItem<String>>((String value) {
