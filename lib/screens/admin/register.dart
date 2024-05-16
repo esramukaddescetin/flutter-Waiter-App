@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Registration Page',
+      title: 'Kayıt Sayfası',
       theme: ThemeData(
         primaryColor: Colors.deepPurple,
         hoverColor: Colors.deepPurpleAccent,
@@ -56,7 +56,7 @@ class RegisterScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.lightGreen,
         title: Text(
-          'Member Management',
+          'Üye Yönetimi',
           style: TextStyle(
             color: Colors.white,
           ),
@@ -89,13 +89,13 @@ class RegisterScreen extends StatelessWidget {
                   inputField(
                     _tName,
                     Icons.person,
-                    'First Name',
+                    'Ad',
                   ),
                   SizedBox(height: 10),
                   inputField(
                     _tLastName,
                     Icons.person,
-                    'Last Name',
+                    'Soyad',
                   ),
                   SizedBox(height: 10),
                   inputField(
@@ -116,7 +116,7 @@ class RegisterScreen extends StatelessWidget {
                       prefixIcon: Icon(
                         Icons.phone,
                       ),
-                      hintText: 'Phone Number',
+                      hintText: 'Telefon Numarası',
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
@@ -128,7 +128,7 @@ class RegisterScreen extends StatelessWidget {
                   inputField(
                     _tPassword,
                     Icons.lock,
-                    'Password',
+                    'Şifre',
                   ),
                   SizedBox(height: 10),
                   DropdownButtonFormField<String>(
@@ -145,7 +145,7 @@ class RegisterScreen extends StatelessWidget {
                     }).toList(),
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.person),
-                      hintText: 'Select Role',
+                      hintText: 'Rol Seçin',
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
@@ -167,8 +167,8 @@ class RegisterScreen extends StatelessWidget {
                             phone: _tPhone.text,
                             password: _tPassword.text);
                       },
-                      child: Text('SIGN UP',
-                          style: TextStyle(color: Colors.white)),
+                      child:
+                          Text('KAYDET', style: TextStyle(color: Colors.white)),
                       style: ElevatedButton.styleFrom(
                         //primary: Colors.deepPurple,
                         shape: RoundedRectangleBorder(

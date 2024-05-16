@@ -10,7 +10,7 @@ class AdminDashboard extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white60,
-        title: Text('Admin Dashboard'),
+        title: Text('Admin Paneli'),
       ),
       drawer: Drawer(
         child: ListView(
@@ -31,7 +31,7 @@ class AdminDashboard extends StatelessWidget {
               ),
             ),
             ListTile(
-              title: Text('Menu Management'),
+              title: Text('Menü Yönetimi'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(
@@ -42,7 +42,7 @@ class AdminDashboard extends StatelessWidget {
               },
             ),
             ListTile(
-              title: Text('Member Management'),
+              title: Text('Üye Yönetimi'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(
@@ -66,7 +66,7 @@ class AdminDashboard extends StatelessWidget {
         decoration: WidgetBackcolor(Colors.white60, Colors.amber),
         child: Center(
           child: Text(
-            'Admin Dashboard Body',
+            'Yönetici Kontrol Paneli Gövdesi',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
         ),

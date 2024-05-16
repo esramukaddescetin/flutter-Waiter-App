@@ -77,7 +77,7 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
       appBar: AppBar(
         backgroundColor: Colors.blueAccent,
         title: Text(
-          'Menu Management',
+          'Menü Yönetimi',
           style: TextStyle(
             color: Colors.white,
           ),
@@ -102,7 +102,7 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
                       _getImage();
                     },
                     child: Text(
-                      'Select Image',
+                      'Fotoğraf seç',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 15,
@@ -168,7 +168,7 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
                     }).toList(),
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.category_outlined),
-                      labelText: 'Category',
+                      labelText: 'Kategori',
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
@@ -178,20 +178,20 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
                   ),
                   SizedBox(height: 20.0),
                   inputField(_ingredientsController, Icons.set_meal,
-                      'Ingredients (comma separated)'),
+                      'Malzemeler (virgülle ayırın)'),
                   SizedBox(height: 20.0),
                   inputField(_nameController,
-                      Icons.emoji_food_beverage_outlined, 'Name'),
+                      Icons.emoji_food_beverage_outlined, 'İsim'),
                   SizedBox(height: 20.0),
                   inputField(
-                      _priceController, Icons.price_change_outlined, 'Price'),
+                      _priceController, Icons.price_change_outlined, 'Fiyat'),
                   SizedBox(height: 20.0),
                   ElevatedButton(
                     onPressed: () {
                       _uploadImage();
                     },
                     child: Text(
-                      'Add Menu Item',
+                      'Menüye Ekle',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 17,
@@ -250,14 +250,14 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Success'),
-          content: Text('Menu item added successfully.'),
+          title: Text('Başarılı'),
+          content: Text('Menü öğesi başarıyla eklendi.'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('OK'),
+              child: Text('TAMAM'),
             ),
           ],
         );
@@ -270,14 +270,14 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Error'),
-          content: Text('An error occurred. Please try again later.'),
+          title: Text('Hata'),
+          content: Text('Bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('OK'),
+              child: Text('TAMAM'),
             ),
           ],
         );
@@ -290,14 +290,14 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Validation Error'),
-          content: Text('Please fill all fields correctly.'),
+          title: Text('Doğrulama Hatası'),
+          content: Text('Lütfen tüm alanları doğru şekilde doldurunuz.'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('OK'),
+              child: Text('TAMAM'),
             ),
           ],
         );

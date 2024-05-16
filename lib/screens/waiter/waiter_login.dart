@@ -70,11 +70,13 @@ class _StaffLoginPageState extends State<WaiterLogin> {
                       if (email.isEmpty || password.isEmpty) {
                         // Eğer boşluk kaldırılmış e-posta ve şifre boşsa, hata mesajı gösterilir
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('Please enter email and password.'),
+                          content: Text('Lütfen e-posta ve şifreyi girin.'),
                         ));
                       } else {
                         // E-posta ve şifre boş değilse, giriş yapma işlemi başlatılır
-                        locator.get<AuthService>().waiterSignIn(context, email, password);
+                        locator
+                            .get<AuthService>()
+                            .waiterSignIn(context, email, password);
                       }
                     },
                     child: Container(

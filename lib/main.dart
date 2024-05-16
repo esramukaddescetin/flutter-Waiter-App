@@ -46,6 +46,7 @@ class WaiterApp extends StatelessWidget {
         '/dashboardScreen': (context) => AdminDashboard(),
         '/register': (context) => RegisterScreen(),
         '/menuManagementScreen': (context) => MenuManagementScreen(),
+        //  '/waiterPanel': (context) => TableDetailsPage(),
       },
     );
   }

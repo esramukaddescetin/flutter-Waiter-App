@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../utils/locator.dart';
+
 import '../../../my_widgets.dart';
 import '../../services/auth_service.dart';
+import '../../utils/locator.dart';
 
 class AdminLogin extends StatefulWidget {
   @override
@@ -69,11 +70,13 @@ class _AdminLoginPageState extends State<AdminLogin> {
                       if (email.isEmpty || password.isEmpty) {
                         // Eğer boşluk kaldırılmış e-posta ve şifre boşsa, hata mesajı gösterilir
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('Please enter email and password.'),
+                          content: Text('Lütfen e-posta ve şifreyi girin.'),
                         ));
                       } else {
                         // E-posta ve şifre boş değilse, giriş yapma işlemi başlatılır
-                        locator.get<AuthService>().adminSignIn(context, email, password);
+                        locator
+                            .get<AuthService>()
+                            .adminSignIn(context, email, password);
                       }
                     },
                     child: Container(
