@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:waiter_app/screens/admin/register.dart';
-import './menu_management.dart'; // Menu yönetimi ekranının import edilmesi
+
+import '../../my_widgets.dart';
+import './menu_management.dart';
 
 class AdminDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Admin Dashboard'),
+        backgroundColor: Colors.white60,
+        title: Text('Admin Paneli'),
       ),
       drawer: Drawer(
         child: ListView(
@@ -16,7 +19,7 @@ class AdminDashboard extends StatelessWidget {
             DrawerHeader(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.grey, Colors.green], // Renkler burada özelleştirildi
+                  colors: [Colors.grey, Colors.amber],
                 ),
               ),
               child: Text(
@@ -28,51 +31,42 @@ class AdminDashboard extends StatelessWidget {
               ),
             ),
             ListTile(
-              title: Text('Menu Yönetimi'),
-              onTap: () {
-                Navigator.pop(context); // Drawer'ı kapat
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MenuManagementScreen()), // Menu yönetimi ekranına geçiş
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Kullanici Kaydet'),
+              title: Text('Menü Yönetimi'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => RegisterScreen()), // Menu yönetimi ekranına geçiş
+                  MaterialPageRoute(
+                      builder: (context) => MenuManagementScreen()),
+                );
+              },
+            ),
+            ListTile(
+              title: Text('Üye Yönetimi'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => RegisterScreen()),
                 );
               },
             ),
             ListTile(
               title: Text('Garson Yönetimi'),
-              onTap: () {
-                // Buraya Garson Yönetimi ekranının geçiş işlemi eklenebilir
-              },
+              onTap: () {},
             ),
             ListTile(
               title: Text('Müşteri Yönetimi'),
-              onTap: () {
-                // Buraya Müşteri Yönetimi ekranının geçiş işlemi eklenebilir
-              },
+              onTap: () {},
             ),
           ],
         ),
       ),
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.grey[200]!, Colors.green[200]!], // Renkler burada özelleştirildi
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
+        decoration: WidgetBackcolor(Colors.white60, Colors.amber),
         child: Center(
           child: Text(
-            'Admin Dashboard Body',
+            'Yönetici Kontrol Paneli Gövdesi',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
         ),

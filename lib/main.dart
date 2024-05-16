@@ -1,17 +1,17 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:waiter_app/screens/admin/menu_management.dart';
 import 'package:waiter_app/screens/admin/register.dart';
-import 'package:waiter_app/screens/user/entry_table_no.dart';
 import 'package:waiter_app/screens/waiter/waiter_panel.dart';
 import 'package:waiter_app/services/provider/auth_provider.dart';
+
 import 'firebase_options.dart';
-import 'utils/locator.dart';
 import 'screens/admin/admin_login.dart';
 import 'screens/admin/dashboard_screen.dart';
 import 'screens/home_page.dart';
 import 'screens/waiter/waiter_login.dart';
-
+import 'utils/locator.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +29,6 @@ void main() async {
   ));
 }
 
-
 class WaiterApp extends StatelessWidget {
   const WaiterApp({Key? key}) : super(key: key);
 
@@ -39,14 +38,19 @@ class WaiterApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
+<<<<<<< HEAD
         '/': (context) => WaiterLogin(),
+=======
+        '/': (context) => HomePage(),
+>>>>>>> 598e112bfa698dfd43b57f17ce86252601916ac7
         '/homePage': (context) => HomePage(),
         '/waiterLogin': (context) => WaiterLogin(),
         '/adminLogin': (context) => AdminLogin(),
         '/waiterPanel': (context) => WaiterPanel(),
         '/dashboardScreen': (context) => AdminDashboard(),
-        '/tableNumberPage': (context) => TableNumberPage(),
         '/register': (context) => RegisterScreen(),
+        '/menuManagementScreen': (context) => MenuManagementScreen(),
+        //  '/waiterPanel': (context) => TableDetailsPage(),
       },
     );
   }
