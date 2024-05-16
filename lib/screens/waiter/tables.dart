@@ -13,6 +13,9 @@ class TableDetailsPage extends StatefulWidget {
 }
 
 class _TableDetailsPageState extends State<TableDetailsPage> {
+  Map<String, bool> notificationChecked = {};
+  Map<String, bool> orderChecked = {};
+
   @override
   void initState() {
     super.initState();
@@ -32,6 +35,9 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
         snapshot.docs.forEach((doc) {
           String message = doc['message'];
           print('Bildirim: $message');
+          setState(() {
+            notificationChecked[doc.id] = false;
+          });
         });
       } else {
         print('Henüz bildirim yok.');
@@ -110,9 +116,13 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                               elevation: 3,
                               child: ListTile(
                                 leading: Checkbox(
-                                  value: false,
-                                  onChanged: (bool? newValue) {
-                                    setState(() {});
+                                  value: notificationChecked[notification.id] ??
+                                      false,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      notificationChecked[notification.id] =
+                                          value!;
+                                    });
                                   },
                                 ),
                                 title: Text(notification['message']),
@@ -182,9 +192,11 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                               elevation: 3,
                               child: ListTile(
                                 leading: Checkbox(
-                                  value: false,
-                                  onChanged: (bool? newValue) {
-                                    setState(() {});
+                                  value: orderChecked[order.id] ?? false,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      orderChecked[order.id] = value!;
+                                    });
                                   },
                                 ),
                                 title: Text(order['name']),
