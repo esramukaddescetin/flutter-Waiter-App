@@ -75,68 +75,6 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
     return Scaffold(
       backgroundColor: Colors.blue[100],
       appBar: AppBar(
-<<<<<<< HEAD
-        title: const Text('Menu Management'),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                _getImage();
-              },
-              child: const Text('Select Image'),
-            ),
-            const SizedBox(height: 16.0),
-            _image != null
-                ? Image.file(
-                    _image!,
-                    height: 200,
-                  )
-                : const Placeholder(
-                    fallbackHeight: 200,
-                  ),
-            DropdownButtonFormField<String>(
-              value: _selectedCategory,
-              onChanged: (String? value) {
-                setState(() {
-                  _selectedCategory = value;
-                });
-              },
-              items: <String>['Anayemek', 'Corba', 'Tatli', 'Salata', 'Arasicak'] 
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              decoration: const InputDecoration(
-                labelText: 'Category',
-              ),
-            ),
-            TextField(
-              controller: _ingredientsController,  
-              decoration: const InputDecoration(labelText: 'Ingredients (comma separated)'),
-            ),
-            TextField(
-              controller: _nameController,
-              decoration: const InputDecoration(labelText: 'Name'),
-            ),
-            TextField(
-              controller: _priceController,
-              decoration: const InputDecoration(labelText: 'Price'),
-            ),
-            const SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                _uploadImage();
-              },
-              child: const Text('Add Menu Item'),
-            ),
-          ],
-=======
         backgroundColor: Colors.blueAccent,
         title: Text(
           'Menü Yönetimi',
@@ -273,7 +211,6 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
               ),
             ),
           ),
->>>>>>> 598e112bfa698dfd43b57f17ce86252601916ac7
         ),
       ),
     );
@@ -284,10 +221,6 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
     String name = _nameController.text;
     double price = double.tryParse(_priceController.text) ?? 0.0;
 
-<<<<<<< HEAD
-    if (_selectedCategory != null && ingredients.isNotEmpty && name.isNotEmpty && price > 0) {
-      FirebaseFirestore.instance.collection('menu').doc(_selectedCategory).collection('items').doc(name).set({
-=======
     if (_selectedCategory != null &&
         ingredients.isNotEmpty &&
         name.isNotEmpty &&
@@ -297,7 +230,6 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
           .doc(_selectedCategory)
           .collection('items')
           .add({
->>>>>>> 598e112bfa698dfd43b57f17ce86252601916ac7
         'imageUrl': imageUrl,
         'ingredients': ingredients,
         'name': name,
@@ -318,23 +250,14 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-<<<<<<< HEAD
-          title: const Text('Success'),
-          content: const Text('Menu item added successfully.'),
-=======
           title: Text('Başarılı'),
           content: Text('Menü öğesi başarıyla eklendi.'),
->>>>>>> 598e112bfa698dfd43b57f17ce86252601916ac7
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-<<<<<<< HEAD
-              child: const Text('OK'),
-=======
               child: Text('TAMAM'),
->>>>>>> 598e112bfa698dfd43b57f17ce86252601916ac7
             ),
           ],
         );
@@ -347,23 +270,14 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-<<<<<<< HEAD
-          title: const Text('Error'),
-          content: const Text('An error occurred. Please try again later.'),
-=======
           title: Text('Hata'),
           content: Text('Bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.'),
->>>>>>> 598e112bfa698dfd43b57f17ce86252601916ac7
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-<<<<<<< HEAD
-              child: const Text('OK'),
-=======
               child: Text('TAMAM'),
->>>>>>> 598e112bfa698dfd43b57f17ce86252601916ac7
             ),
           ],
         );
@@ -376,23 +290,14 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-<<<<<<< HEAD
-          title: const Text('Validation Error'),
-          content: const Text('Please fill all fields correctly.'),
-=======
           title: Text('Doğrulama Hatası'),
           content: Text('Lütfen tüm alanları doğru şekilde doldurunuz.'),
->>>>>>> 598e112bfa698dfd43b57f17ce86252601916ac7
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-<<<<<<< HEAD
-              child: const Text('OK'),
-=======
               child: Text('TAMAM'),
->>>>>>> 598e112bfa698dfd43b57f17ce86252601916ac7
             ),
           ],
         );
