@@ -38,11 +38,7 @@ class WaiterApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
-<<<<<<< HEAD
         '/': (context) => WaiterLogin(),
-=======
-        '/': (context) => HomePage(),
->>>>>>> 598e112bfa698dfd43b57f17ce86252601916ac7
         '/homePage': (context) => HomePage(),
         '/waiterLogin': (context) => WaiterLogin(),
         '/adminLogin': (context) => AdminLogin(),
