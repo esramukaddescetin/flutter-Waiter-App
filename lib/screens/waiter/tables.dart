@@ -182,6 +182,19 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                   } else {
                     if (orderSnapshot.hasData &&
                         orderSnapshot.data!.docs.isNotEmpty) {
+                          Map<String, dynamic> uniqueOrders = {};
+                      orderSnapshot.data!.docs.forEach((doc) {
+                        String productName = doc['name'];
+                        if (uniqueOrders.containsKey(productName)) {
+                          uniqueOrders[productName]['quantity'] += doc['quantity'];
+                        } else {
+                          uniqueOrders[productName] = {
+                            'quantity': doc['quantity'],
+                            'name': doc['name'],
+                            'id': doc.id
+                          };
+                        }
+                      });
                       return ListView.builder(
                         itemCount: orderSnapshot.data!.docs.length,
                         itemBuilder: (context, index) {
@@ -199,9 +212,9 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                                     });
                                   },
                                 ),
-                                title: Text(order['name']),
+                                 title: Text(order['name']),
                                 subtitle: Text(
-                                  'Sipariş ID: ${order.id}',
+                                  'Miktar: ${order['quantity']}',
                                   style: TextStyle(
                                     color: Colors.grey,
                                     fontWeight: FontWeight.bold,
