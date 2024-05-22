@@ -20,7 +20,6 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
     super.initState();
   }
 
-
   void updateNotificationChecked(String docId, bool isChecked) {
     FirebaseFirestore.instance.collection('notifications').doc(docId).update({
       'checked': isChecked,
@@ -105,7 +104,7 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                           return Card(
                             child: ListTile(
                               title: Text(
-                                notification['message'],
+                                data['message'] ?? '',
                                 style: TextStyle(
                                   fontWeight: isChecked
                                       ? FontWeight.normal
@@ -162,34 +161,57 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                   } else {
                     if (orderSnapshot.hasData &&
                         orderSnapshot.data!.docs.isNotEmpty) {
-                      return ListView.builder(
-                        itemCount: orderSnapshot.data!.docs.length,
-                        itemBuilder: (context, index) {
-                          var order = orderSnapshot.data!.docs[index];
-                          var data = order.data() as Map<String, dynamic>;
-                          bool isChecked = data.containsKey('checked')
-                              ? data['checked']
-                              : false;
-
-                          return Card(
-                            child: ListTile(
-                              title: Text(
-                                order['name'],
-                                style: TextStyle(
-                                  fontWeight: isChecked
-                                      ? FontWeight.normal
-                                      : FontWeight.bold,
-                                ),
-                              ),
-                              trailing: Checkbox(
-                                value: isChecked,
-                                onChanged: (bool? value) {
-                                  updateOrderChecked(order.id, value ?? false);
-                                },
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Text(
+                              'Toplam Sipariş: ${orderSnapshot.data!.docs.length}',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.pink[700],
                               ),
                             ),
-                          );
-                        },
+                          ),
+                          const SizedBox(height: 8),
+                          Expanded(
+                            child: ListView.builder(
+                              itemCount: orderSnapshot.data!.docs.length,
+                              itemBuilder: (context, index) {
+                                var order = orderSnapshot.data!.docs[index];
+                                var data = order.data() as Map<String, dynamic>;
+                                bool isChecked = data.containsKey('checked')
+                                    ? data['checked']
+                                    : false;
+                                int quantity = data.containsKey('quantity')
+                                    ? data['quantity']
+                                    : 1;
+                                return Card(
+                                  child: ListTile(
+                                    title: Text(
+                                      '${data['name']} - Adet: $quantity',
+                                      style: TextStyle(
+                                        fontWeight: isChecked
+                                            ? FontWeight.normal
+                                            : FontWeight.bold,
+                                      ),
+                                    ),
+                                    trailing: Checkbox( 
+                                      value: isChecked,
+                                      onChanged: (bool? value) {
+                                        updateOrderChecked(
+                                            order.id, value ?? false);
+                                      },
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
                       );
                     } else {
                       return const Center(child: Text('Henüz sipariş yok.'));
