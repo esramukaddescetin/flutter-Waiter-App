@@ -41,6 +41,18 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
     }
   }
 
+  void updateNotificationChecked(String docId, bool isChecked) {
+    FirebaseFirestore.instance.collection('notifications').doc(docId).update({
+      'checked': isChecked,
+    });
+  }
+
+  void updateOrderChecked(String docId, bool isChecked) {
+    FirebaseFirestore.instance.collection('orders').doc(docId).update({
+      'checked': isChecked,
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +72,6 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
           Color(0xFFEF9A9A),
           Colors.white,
         ),
-        //  color: Colors.grey[200], // Arka plan rengi
         padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,15 +115,18 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                         itemBuilder: (context, index) {
                           var notification =
                               notificationSnapshot.data!.docs[index];
+                          var data = notification.data() as Map<String, dynamic>;
+                          bool isChecked = data.containsKey('checked') ? data['checked'] : false;
                           return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 4),
                             child: Card(
                               elevation: 3,
                               child: ListTile(
                                 leading: Checkbox(
-                                  value: false,
-                                  onChanged: (bool? newValue) {
-                                    setState(() {});
+                                  value: isChecked,
+                                  onChanged: (bool? value) {
+                                    updateNotificationChecked(
+                                        notification.id, value!);
                                   },
                                 ),
                                 title: Text(notification['message']),
@@ -172,24 +186,41 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                   } else {
                     if (orderSnapshot.hasData &&
                         orderSnapshot.data!.docs.isNotEmpty) {
+                      Map<String, dynamic> uniqueOrders = {};
+                      orderSnapshot.data!.docs.forEach((doc) {
+                        String productName = doc['name'];
+                        var data = doc.data() as Map<String, dynamic>;
+                        if (uniqueOrders.containsKey(productName)) {
+                          uniqueOrders[productName]['quantity'] += data['quantity'];
+                        } else {
+                          uniqueOrders[productName] = {
+                            'quantity': data['quantity'],
+                            'name': data['name'],
+                            'id': doc.id,
+                            'checked': data.containsKey('checked') ? data['checked'] : false,
+                          };
+                        }
+                      });
                       return ListView.builder(
-                        itemCount: orderSnapshot.data!.docs.length,
+                        itemCount: uniqueOrders.length,
                         itemBuilder: (context, index) {
-                          var order = orderSnapshot.data!.docs[index];
+                          String productName =
+                              uniqueOrders.keys.elementAt(index);
+                          var order = uniqueOrders[productName];
                           return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 4),
                             child: Card(
                               elevation: 3,
                               child: ListTile(
                                 leading: Checkbox(
-                                  value: false,
-                                  onChanged: (bool? newValue) {
-                                    setState(() {});
+                                  value: order['checked'],
+                                  onChanged: (bool? value) {
+                                    updateOrderChecked(order['id'], value!);
                                   },
                                 ),
                                 title: Text(order['name']),
                                 subtitle: Text(
-                                  'Sipariş ID: ${order.id}',
+                                  'Miktar: ${order['quantity']}',
                                   style: TextStyle(
                                     color: Colors.grey,
                                     fontWeight: FontWeight.bold,
