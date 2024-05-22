@@ -5,6 +5,7 @@ import 'package:waiter_app/screens/admin/menu_management.dart';
 import 'package:waiter_app/screens/admin/register.dart';
 import 'package:waiter_app/screens/waiter/waiter_panel.dart';
 import 'package:waiter_app/services/provider/auth_provider.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'firebase_options.dart';
 import 'screens/admin/admin_login.dart';
@@ -13,12 +14,16 @@ import 'screens/home_page.dart';
 import 'screens/waiter/waiter_login.dart';
 import 'utils/locator.dart';
 
+// final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+//     FlutterLocalNotificationsPlugin();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   setupLocator();
+  // initializeNotifications();
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider<AuthProvider>(
@@ -29,6 +34,19 @@ void main() async {
   ));
 }
 
+// void initializeNotifications() {
+//   const AndroidInitializationSettings initializationSettingsAndroid =
+//       AndroidInitializationSettings('app_icon');
+//   final DarwinInitializationSettings initializationSettingsIOS =
+//       DarwinInitializationSettings();
+//   final InitializationSettings initializationSettings =
+//       InitializationSettings(
+//     android: initializationSettingsAndroid,
+//     iOS: initializationSettingsIOS,
+//   );
+//   flutterLocalNotificationsPlugin.initialize(initializationSettings);
+// }
+
 class WaiterApp extends StatelessWidget {
   const WaiterApp({Key? key}) : super(key: key);
 
@@ -38,7 +56,7 @@ class WaiterApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
-        '/': (context) => WaiterPanel(),
+        '/': (context) => HomePage(),
         '/homePage': (context) => HomePage(),
         '/waiterLogin': (context) => WaiterLogin(),
         '/adminLogin': (context) => AdminLogin(),
@@ -46,7 +64,6 @@ class WaiterApp extends StatelessWidget {
         '/dashboardScreen': (context) => AdminDashboard(),
         '/register': (context) => RegisterScreen(),
         '/menuManagementScreen': (context) => MenuManagementScreen(),
-        //  '/waiterPanel': (context) => TableDetailsPage(),
       },
     );
   }
