@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:waiter_app/screens/waiter/tables.dart';
 
 class WaiterPanel extends StatefulWidget {
@@ -14,7 +13,26 @@ class _WaiterPanelState extends State<WaiterPanel> {
   @override
   void initState() {
     super.initState();
-    getOrderFromFirebase();
+  }
+
+  Future<bool> checkTableStatus(int tableNumber) async {
+    // Orders koleksiyonundan kontrol et
+    QuerySnapshot orderSnapshot = await FirebaseFirestore.instance
+        .collection('orders')
+        .where('tableNumber', isEqualTo: tableNumber)
+        .get();
+    bool hasUnseenOrders = orderSnapshot.docs.any(
+        (doc) => !(doc.data() as Map<String, dynamic>)['checked'] ?? false);
+
+    // Notifications koleksiyonundan kontrol et
+    QuerySnapshot notificationSnapshot = await FirebaseFirestore.instance
+        .collection('notifications')
+        .where('tableNumber', isEqualTo: tableNumber)
+        .get();
+    bool hasUnseenNotifications = notificationSnapshot.docs.any(
+        (doc) => !(doc.data() as Map<String, dynamic>)['checked'] ?? false);
+
+    return hasUnseenOrders || hasUnseenNotifications;
   }
 
   @override
@@ -34,21 +52,15 @@ class _WaiterPanelState extends State<WaiterPanel> {
         color: Colors.grey[200],
         padding: const EdgeInsets.all(16.0),
         child: GridView.count(
-          crossAxisCount: 2, // İki butonu yatayda yan yana göstermek için
+          crossAxisCount: 2,
           mainAxisSpacing: 16.0,
           crossAxisSpacing: 16.0,
           children: List.generate(20, (index) {
-            // 20 masa numarası için butonlar oluşturuyoruz
-            int tableNumber = index + 1; // Masa numarası 1'den başlıyor
-            return StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection('orders')
-                  .where('tableNumber', isEqualTo: tableNumber)
-                  .snapshots(),
-              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                bool hasNotification = snapshot.hasData &&
-                    snapshot.data!.docs
-                        .any((doc) => !(doc['checked'] ?? false));
+            int tableNumber = index + 1;
+            return FutureBuilder<bool>(
+              future: checkTableStatus(tableNumber),
+              builder: (context, snapshot) {
+                bool hasNotification = snapshot.data ?? false;
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -63,9 +75,8 @@ class _WaiterPanelState extends State<WaiterPanel> {
                     decoration: BoxDecoration(
                       color: hasNotification
                           ? Colors.red.shade200
-                          : Colors.green.shade200, // Yeşil tonu
-                      borderRadius: BorderRadius.circular(
-                          12.0), // Kare yapmak için kenar yarıçapı
+                          : Colors.green.shade200, // Kırmızı veya yeşil tonu
+                      borderRadius: BorderRadius.circular(12.0),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.grey.withOpacity(0.5),
@@ -75,28 +86,14 @@ class _WaiterPanelState extends State<WaiterPanel> {
                         ),
                       ],
                     ),
-                    child: Stack(
-                      children: [
-                        Center(
-                          child: Text(
-                            'Masa $tableNumber',
-                            style: const TextStyle(
-                              fontSize: 24,
-                              color: Colors.white,
-                            ),
-                          ),
+                    child: Center(
+                      child: Text(
+                        'Masa $tableNumber',
+                        style: const TextStyle(
+                          fontSize: 24,
+                          color: Colors.white,
                         ),
-                        if (hasNotification)
-                          const Positioned(
-                            top: 8,
-                            right: 8,
-                            child: const Icon(
-                              Icons.notification_important,
-                              color: Colors.red,
-                              size: 24,
-                            ),
-                          ),
-                      ],
+                      ),
                     ),
                   ),
                 );
@@ -106,21 +103,5 @@ class _WaiterPanelState extends State<WaiterPanel> {
         ),
       ),
     );
-  }
-
-
-  void getOrderFromFirebase() async {
-    FirebaseFirestore.instance
-        .collection('orders')
-        .snapshots()
-        .listen((snapshot) {
-      snapshot.docs.forEach((doc) {
-        String orderId = doc.id;
-        String itemName = doc['name'];
-        int tableNumber = doc['tableNumber'];
-        print(
-            'Yeni bir sipariş alındı: $orderId, $itemName, Masa: $tableNumber');
-      });
-    });
   }
 }

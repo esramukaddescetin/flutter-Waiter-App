@@ -20,27 +20,6 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
     super.initState();
   }
 
-  // void getNotificationsFromFirebase() async {
-  //   try {
-  //     QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
-  //         .instance
-  //         .collection('notifications')
-  //         .where('tableNumber', isEqualTo: widget.tableNumber)
-  //         .orderBy('timestamp', descending: true)
-  //         .get();
-
-  //     if (snapshot.docs.isNotEmpty) {
-  //       snapshot.docs.forEach((doc) {
-  //         String message = doc['message'];
-  //         print('Bildirim: $message');
-  //       });
-  //     } else {
-  //       print('Henüz bildirim yok.');
-  //     }
-  //   } catch (e) {
-  //     print('Hata oluştu: $e');
-  //   }
-  // }
 
   void updateNotificationChecked(String docId, bool isChecked) {
     FirebaseFirestore.instance.collection('notifications').doc(docId).update({
@@ -122,7 +101,7 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                           bool isChecked = data.containsKey('checked')
                               ? data['checked']
                               : false;
-                              
+
                           return Card(
                             child: ListTile(
                               title: Text(
@@ -175,7 +154,6 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                 stream: FirebaseFirestore.instance
                     .collection('orders')
                     .where('tableNumber', isEqualTo: widget.tableNumber)
-                    .orderBy('timestamp', descending: true)
                     .snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> orderSnapshot) {
                   if (orderSnapshot.connectionState ==
