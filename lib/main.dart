@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:waiter_app/screens/admin/menu_management.dart';
 import 'package:waiter_app/screens/admin/register.dart';
+import 'package:waiter_app/screens/admin/table_management.dart';
 import 'package:waiter_app/screens/waiter/waiter_panel.dart';
 import 'package:waiter_app/services/provider/auth_provider.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -56,7 +57,7 @@ class WaiterApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
-        '/': (context) => HomePage(),
+        '/': (context) => WaiterPanel(),
         '/homePage': (context) => HomePage(),
         '/waiterLogin': (context) => WaiterLogin(),
         '/adminLogin': (context) => AdminLogin(),
@@ -64,6 +65,7 @@ class WaiterApp extends StatelessWidget {
         '/dashboardScreen': (context) => AdminDashboard(),
         '/register': (context) => RegisterScreen(),
         '/menuManagementScreen': (context) => MenuManagementScreen(),
+        '/tableManagementScreen': (context) => TableManagementScreen(),
       },
     );
   }

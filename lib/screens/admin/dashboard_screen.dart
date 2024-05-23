@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:waiter_app/screens/admin/register.dart';
+import 'package:waiter_app/screens/admin/table_management.dart';
 
 import '../../my_widgets.dart';
 import './menu_management.dart';
@@ -58,6 +59,18 @@ class AdminDashboard extends StatelessWidget {
             ListTile(
               title: Text('Müşteri Yönetimi'),
               onTap: () {},
+            ),
+            ListTile(
+              title: Text('Masa Yönetimi'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TableManagementScreen(),
+                  ),
+                );
+              },
             ),
           ],
         ),

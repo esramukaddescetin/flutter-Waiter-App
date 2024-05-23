@@ -74,6 +74,21 @@ class AuthService {
     }
   }
 
+  Future<void> addTable(String tableNumber) async {
+    String tableNo;
+    try {
+      await FirebaseFirestore.instance
+          .collection('tables')
+          .doc('table $tableNumber')
+          .set({
+        'tableNumber': tableNumber
+      });
+      print('Masa $tableNumber eklendi.');
+    } catch (e) {
+      print('Hata oluştu: $e');
+    }
+  }
+
   Future<void> adminSignIn(
       BuildContext context, String email, String password) async {
     try {
