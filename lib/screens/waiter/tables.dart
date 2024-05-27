@@ -32,6 +32,30 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
     });
   }
 
+  void clearTableData(int tableNumber) {
+    // Masaya ait tüm bildirimleri sil
+    FirebaseFirestore.instance
+        .collection('notifications')
+        .where('tableNumber', isEqualTo: tableNumber)
+        .get()
+        .then((querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        doc.reference.delete();
+      });
+    });
+
+    // Masaya ait tüm siparişleri sil
+    FirebaseFirestore.instance
+        .collection('orders')
+        .where('tableNumber', isEqualTo: tableNumber)
+        .get()
+        .then((querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        doc.reference.delete();
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     selectedTableNumber = widget.tableNumber;
@@ -46,6 +70,37 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
               fontFamily: 'MadimiOne'),
         ),
         backgroundColor: const Color(0xFFEF9A9A), // App bar arka plan rengi
+        actions: [
+          IconButton(
+            icon: Icon(Icons.cleaning_services),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text('Masa Temizleme'),
+                  content: Text(
+                      'Masa ${widget.tableNumber} için tüm siparişleri ve bildirimleri silmek istediğinizden emin misiniz?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text('İptal'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        clearTableData(widget.tableNumber);
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      },
+                      child: Text('Evet'),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: Container(
         decoration: WidgetBackcolor(
@@ -199,7 +254,7 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                                             : FontWeight.bold,
                                       ),
                                     ),
-                                    trailing: Checkbox( 
+                                    trailing: Checkbox(
                                       value: isChecked,
                                       onChanged: (bool? value) {
                                         updateOrderChecked(
