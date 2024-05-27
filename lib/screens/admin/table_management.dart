@@ -24,12 +24,18 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class TableManagementScreen extends StatelessWidget {
+class TableManagementScreen extends StatefulWidget {
+  @override
+  _TableManagementScreenState createState() => _TableManagementScreenState();
+}
+
+class _TableManagementScreenState extends State<TableManagementScreen> {
   final _tTableNo = TextEditingController();
 
   Widget inputField(TextEditingController controller, icon, String text) {
     return TextFormField(
       controller: controller,
+      keyboardType: TextInputType.number, // Sadece sayısal girişe izin ver
       decoration: InputDecoration(
         prefixIcon: Icon(icon),
         hintText: text,
@@ -40,6 +46,17 @@ class TableManagementScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _addTable() async {
+    await locator.get<AuthService>().addTable(_tTableNo.text);
+    _tTableNo.clear(); // Formu temizle
+    setState(() {}); // Ekranı güncelle
+  }
+
+  Future<void> _deleteTable(int tableNumber) async {
+    await locator.get<AuthService>().deleteTable(tableNumber);
+    setState(() {}); // Ekranı güncelle
   }
 
   @override
@@ -79,16 +96,13 @@ class TableManagementScreen extends StatelessWidget {
                   inputField(
                     _tTableNo,
                     Icons.table_bar_rounded,
-                    'Masa Numarasi',
+                    'Masa Numarası',
                   ),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {
-                        locator.get<AuthService>().addTable(_tTableNo.text);
-                      },
-                      child:
-                          Text('KAYDET', style: TextStyle(color: Colors.white)),
+                      onPressed: _addTable,
+                      child: Text('KAYDET', style: TextStyle(color: Colors.white)),
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
@@ -101,7 +115,7 @@ class TableManagementScreen extends StatelessWidget {
                   StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
                         .collection('tables')
-                        .orderBy('tableNumber')
+                        .orderBy('tableNumber', descending: false)
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
@@ -120,6 +134,10 @@ class TableManagementScreen extends StatelessWidget {
                           final tableNumber = tableData['tableNumber'];
                           return ListTile(
                             title: Text('Masa $tableNumber'),
+                            trailing: IconButton(
+                              icon: Icon(Icons.delete, color: Colors.red),
+                              onPressed: () => _deleteTable(tableNumber),
+                            ),
                           );
                         },
                       );

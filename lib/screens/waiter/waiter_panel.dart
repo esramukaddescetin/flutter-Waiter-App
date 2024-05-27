@@ -38,9 +38,9 @@ class _WaiterPanelState extends State<WaiterPanel> {
             // Masaları küçükten büyüğe sıralayalım
             tables.sort((a, b) {
               int aTableNumber =
-                  int.parse((a.data() as Map<String, dynamic>)['tableNumber']);
+                  (a.data() as Map<String, dynamic>)['tableNumber'] as int;
               int bTableNumber =
-                  int.parse((b.data() as Map<String, dynamic>)['tableNumber']);
+                  (b.data() as Map<String, dynamic>)['tableNumber'] as int;
               return aTableNumber.compareTo(bTableNumber);
             });
 
@@ -54,7 +54,7 @@ class _WaiterPanelState extends State<WaiterPanel> {
               itemBuilder: (context, index) {
                 final table = tables[index];
                 final tableData = table.data() as Map<String, dynamic>;
-                final tableNumber = tableData['tableNumber'];
+                final tableNumber = tableData['tableNumber'] as int;
 
                 // 'orders' koleksiyonunu sorgulayıp masaya ait bildirim olup olmadığını kontrol edelim
                 return StreamBuilder<QuerySnapshot>(
