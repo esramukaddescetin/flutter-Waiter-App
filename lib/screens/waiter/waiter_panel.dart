@@ -70,8 +70,9 @@ class _WaiterPanelState extends State<WaiterPanel> {
                     bool hasNotification = false;
                     if (orderSnapshot.hasData) {
                       for (var order in orderSnapshot.data!.docs) {
-                        if (!(order.data()
-                            as Map<String, dynamic>)['checked']) {
+                        final orderData = order.data() as Map<String, dynamic>;
+                        final checked = orderData['checked'];
+                        if (checked == null || !(checked as bool)) { // Check for null explicitly
                           hasNotification = true;
                           break;
                         }
