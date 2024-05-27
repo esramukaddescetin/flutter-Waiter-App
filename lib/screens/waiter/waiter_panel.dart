@@ -67,6 +67,7 @@ class _WaiterPanelState extends State<WaiterPanel> {
                         ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
                     }
+                    int orderCount = 0;
                     bool hasOrderNotification = false;
                     if (orderSnapshot.hasData) {
                       for (var order in orderSnapshot.data!.docs) {
@@ -74,7 +75,7 @@ class _WaiterPanelState extends State<WaiterPanel> {
                         final checked = orderData['checked'];
                         if (checked == null || !(checked as bool)) {
                           hasOrderNotification = true;
-                          break;
+                          orderCount++;
                         }
                       }
                     }
@@ -138,19 +139,19 @@ class _WaiterPanelState extends State<WaiterPanel> {
                                   ),
                                 ),
                               ),
-                              if (notificationCount > 0)
+                              if (notificationCount + orderCount > 0)
                                 Positioned(
                                   top: 8,
                                   right: 8,
                                   child: Container(
-                                    padding: EdgeInsets.all(4),
-                                    decoration: BoxDecoration(
+                                    padding: const EdgeInsets.all(4),
+                                    decoration: const BoxDecoration(
                                       color: Colors.white,
                                       shape: BoxShape.circle,
                                     ),
                                     child: Text(
-                                      notificationCount.toString(),
-                                      style: TextStyle(
+                                      (notificationCount + orderCount).toString(),
+                                      style: const TextStyle(
                                         color: Colors.red, // Bildirim sayısı için uygun renk
                                         fontWeight: FontWeight.bold,
                                       ),
