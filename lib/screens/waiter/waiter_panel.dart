@@ -67,53 +67,78 @@ class _WaiterPanelState extends State<WaiterPanel> {
                         ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
                     }
-                    bool hasNotification = false;
+                    bool hasOrderNotification = false;
                     if (orderSnapshot.hasData) {
                       for (var order in orderSnapshot.data!.docs) {
                         final orderData = order.data() as Map<String, dynamic>;
                         final checked = orderData['checked'];
-                        if (checked == null || !(checked as bool)) { // Check for null explicitly
-                          hasNotification = true;
+                        if (checked == null || !(checked as bool)) {
+                          hasOrderNotification = true;
                           break;
                         }
                       }
                     }
 
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                TableDetailsPage(tableNumber: tableNumber),
+                    // 'notifications' koleksiyonunu sorgulayıp masaya ait bildirim olup olmadığını kontrol edelim
+                    return StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('notifications')
+                          .where('tableNumber', isEqualTo: tableNumber)
+                          .snapshots(),
+                      builder: (context, notificationSnapshot) {
+                        if (notificationSnapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(child: CircularProgressIndicator());
+                        }
+                        bool hasNotification = false;
+                        if (notificationSnapshot.hasData) {
+                          for (var notification in notificationSnapshot.data!.docs) {
+                            final notificationData = notification.data() as Map<String, dynamic>;
+                            final checked = notificationData['checked'];
+                            if (checked == null || !(checked as bool)) {
+                              hasNotification = true;
+                              break;
+                            }
+                          }
+                        }
+
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    TableDetailsPage(tableNumber: tableNumber),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: hasOrderNotification || hasNotification
+                                  ? Colors.red.shade200
+                                  : Colors.green.shade200,
+                              borderRadius: BorderRadius.circular(12.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 2,
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Text(
+                                'Masa $tableNumber',
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
                           ),
                         );
                       },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: hasNotification
-                              ? Colors.red.shade200
-                              : Colors.green.shade200,
-                          borderRadius: BorderRadius.circular(12.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 2,
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Masa $tableNumber',
-                            style: const TextStyle(
-                              fontSize: 24,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
                     );
                   },
                 );
