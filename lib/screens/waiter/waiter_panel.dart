@@ -90,14 +90,13 @@ class _WaiterPanelState extends State<WaiterPanel> {
                             ConnectionState.waiting) {
                           return const Center(child: CircularProgressIndicator());
                         }
-                        bool hasNotification = false;
+                        int notificationCount = 0;
                         if (notificationSnapshot.hasData) {
                           for (var notification in notificationSnapshot.data!.docs) {
                             final notificationData = notification.data() as Map<String, dynamic>;
                             final checked = notificationData['checked'];
                             if (checked == null || !(checked as bool)) {
-                              hasNotification = true;
-                              break;
+                              notificationCount++;
                             }
                           }
                         }
@@ -112,30 +111,53 @@ class _WaiterPanelState extends State<WaiterPanel> {
                               ),
                             );
                           },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: hasOrderNotification || hasNotification
-                                  ? Colors.red.shade200
-                                  : Colors.green.shade200,
-                              borderRadius: BorderRadius.circular(12.0),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 2,
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 2),
+                          child: Stack(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: hasOrderNotification || notificationCount > 0
+                                      ? Colors.red.shade200
+                                      : Colors.green.shade200,
+                                  borderRadius: BorderRadius.circular(12.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      spreadRadius: 2,
+                                      blurRadius: 4,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                            child: Center(
-                              child: Text(
-                                'Masa $tableNumber',
-                                style: const TextStyle(
-                                  fontSize: 24,
-                                  color: Colors.white,
+                                child: Center(
+                                  child: Text(
+                                    'Masa $tableNumber',
+                                    style: const TextStyle(
+                                      fontSize: 24,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                              if (notificationCount > 0)
+                                Positioned(
+                                  top: 8,
+                                  right: 8,
+                                  child: Container(
+                                    padding: EdgeInsets.all(4),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Text(
+                                      notificationCount.toString(),
+                                      style: TextStyle(
+                                        color: Colors.red, // Bildirim sayısı için uygun renk
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            ],
                           ),
                         );
                       },
