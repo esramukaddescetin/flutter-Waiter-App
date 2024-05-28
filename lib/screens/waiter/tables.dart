@@ -56,6 +56,11 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
     });
   }
 
+  String formatTimestamp(Timestamp timestamp) {
+    DateTime dateTime = timestamp.toDate();
+    return '${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
+  }
+
   @override
   Widget build(BuildContext context) {
     selectedTableNumber = widget.tableNumber;
@@ -155,6 +160,7 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                           bool isChecked = data.containsKey('checked')
                               ? data['checked']
                               : false;
+                          String timestamp = formatTimestamp(data['timestamp']);
 
                           return Card(
                             child: ListTile(
@@ -166,6 +172,7 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                                       : FontWeight.bold,
                                 ),
                               ),
+                              subtitle: Text(timestamp),
                               trailing: Checkbox(
                                 value: isChecked,
                                 onChanged: (bool? value) {
@@ -208,6 +215,7 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                 stream: FirebaseFirestore.instance
                     .collection('orders')
                     .where('tableNumber', isEqualTo: widget.tableNumber)
+                    .orderBy('timestamp', descending: true)
                     .snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> orderSnapshot) {
                   if (orderSnapshot.connectionState ==
@@ -244,6 +252,9 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                                 int quantity = data.containsKey('quantity')
                                     ? data['quantity']
                                     : 1;
+                                String timestamp =
+                                    formatTimestamp(data['timestamp']);
+
                                 return Card(
                                   child: ListTile(
                                     title: Text(
@@ -254,6 +265,7 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                                             : FontWeight.bold,
                                       ),
                                     ),
+                                    subtitle: Text(timestamp),
                                     trailing: Checkbox(
                                       value: isChecked,
                                       onChanged: (bool? value) {
@@ -280,4 +292,12 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
       ),
     );
   }
+}
+
+void main() {
+  int tableNumber = 1;
+  runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: TableDetailsPage(tableNumber: tableNumber),
+  ));
 }
