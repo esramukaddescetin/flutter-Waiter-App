@@ -133,7 +133,6 @@ class _WaiterPanelState extends State<WaiterPanel> {
         String itemName = doc['name'];
         int tableNumber = doc['tableNumber'];
 
-        // Sipariş hakkında işlem yapabilirsiniz (bildirim gösterme, siparişi işleme alma vb.)
         print(
             'Yeni bir sipariş alındı: $orderId, $itemName, Masa: $tableNumber');
       });
