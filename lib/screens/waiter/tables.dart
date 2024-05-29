@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
+import 'package:waiter_app/screens/waiter/orders/past_orders.dart';
 import '../../my_widgets.dart';
 
 class TableDetailsPage extends StatefulWidget {
@@ -32,9 +32,24 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
   void updateOrderChecked(String docId, bool isChecked) {
     FirebaseFirestore.instance.collection('orders').doc(docId).update({
       'checked': isChecked,
+    }).then((_) {
+      if (isChecked) {
+        moveOrderToCompleted(docId);
+      }
     }).catchError((error) {
       print("Failed to update order: $error");
     });
+  }
+
+  void moveOrderToCompleted(String docId) async {
+    DocumentSnapshot orderDoc = await FirebaseFirestore.instance
+        .collection('orders')
+        .doc(docId)
+        .get();
+    var orderData = orderDoc.data() as Map<String, dynamic>;
+
+    await FirebaseFirestore.instance.collection('completed_orders').add(orderData);
+    await FirebaseFirestore.instance.collection('orders').doc(docId).delete();
   }
 
   void clearTableData(int tableNumber) {
@@ -260,6 +275,21 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                     );
                   }
                 },
+              ),
+            ),
+            const SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PastOrdersScreen(tableNumber: widget.tableNumber),
+                    ),
+                  );
+                },
+                child: const Text('Geçmiş Siparişleri Görüntüle'),
               ),
             ),
           ],
