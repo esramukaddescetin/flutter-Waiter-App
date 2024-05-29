@@ -8,7 +8,7 @@ class PastOrdersScreen extends StatelessWidget {
 
   String formatTimestamp(Timestamp timestamp) {
     DateTime dateTime = timestamp.toDate();
-    return '${dateTime.year}-${dateTime.month}-${dateTime.day} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
+    return '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
   }
 
   @override
@@ -18,10 +18,11 @@ class PastOrdersScreen extends StatelessWidget {
         title: Text(
           'Geçmiş Siparişler - Masa $tableNumber',
           style: TextStyle(
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
-              color: Colors.pink[800],
-              fontFamily: 'MadimiOne'),
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+            color: Colors.pink[800],
+            fontFamily: 'MadimiOne',
+          ),
         ),
         backgroundColor: const Color(0xFFEF9A9A),
       ),
@@ -57,14 +58,39 @@ class PastOrdersScreen extends StatelessWidget {
                   String timestamp = formatTimestamp(data['timestamp']);
 
                   return Card(
+                    margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0),
                     child: ListTile(
+                      contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
                       title: Text(
-                        '${data['name']} - Adet: $quantity',
-                        style: TextStyle(
+                        data['name'] ?? '',
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
+                          color: Colors.black87,
                         ),
                       ),
-                      subtitle: Text(timestamp),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 4.0),
+                          Text(
+                            'Adet: $quantity',
+                            style: const TextStyle(
+                              fontSize: 16.0,
+                              color: Colors.black54,
+                            ),
+                          ),
+                          const SizedBox(height: 4.0),
+                          Text(
+                            timestamp,
+                            style: const TextStyle(
+                              fontSize: 14.0,
+                              color: Colors.black45,
+                            ),
+                          ),
+                        ],
+                      ),
+                      isThreeLine: true,
                     ),
                   );
                 },

@@ -14,18 +14,35 @@ class TableDetailsPage extends StatefulWidget {
 
 class _TableDetailsPageState extends State<TableDetailsPage> {
   int selectedTableNumber = 0;
+  Map<String, int> initialQuantities = {};
 
   @override
   void initState() {
     super.initState();
     selectedTableNumber = widget.tableNumber;
+    fetchInitialQuantities();
+  }
+
+  void fetchInitialQuantities() {
+    FirebaseFirestore.instance
+        .collection('orders')
+        .where('tableNumber', isEqualTo: widget.tableNumber)
+        .get()
+        .then((querySnapshot) {
+      setState(() {
+        for (var doc in querySnapshot.docs) {
+          var data = doc.data() as Map<String, dynamic>;
+          initialQuantities[doc.id] = data['quantity'] ?? 1;
+        }
+      });
+    });
   }
 
   void updateNotificationChecked(String docId, bool isChecked) {
     FirebaseFirestore.instance.collection('notifications').doc(docId).update({
       'checked': isChecked,
     }).catchError((error) {
-      print("Failed to update notification: $error");
+      print("Bildirim güncellenemedi: $error");
     });
   }
 
@@ -37,18 +54,18 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
         moveOrderToCompleted(docId);
       }
     }).catchError((error) {
-      print("Failed to update order: $error");
+      print("Sipariş güncellenemedi: $error");
     });
   }
 
   void moveOrderToCompleted(String docId) async {
-    DocumentSnapshot orderDoc = await FirebaseFirestore.instance
-        .collection('orders')
-        .doc(docId)
-        .get();
+    DocumentSnapshot orderDoc =
+        await FirebaseFirestore.instance.collection('orders').doc(docId).get();
     var orderData = orderDoc.data() as Map<String, dynamic>;
 
-    await FirebaseFirestore.instance.collection('completed_orders').add(orderData);
+    await FirebaseFirestore.instance
+        .collection('completed_orders')
+        .add(orderData);
     await FirebaseFirestore.instance.collection('orders').doc(docId).delete();
   }
 
@@ -60,7 +77,7 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
         .then((querySnapshot) {
       for (var doc in querySnapshot.docs) {
         doc.reference.delete().catchError((error) {
-          print("Failed to delete notification: $error");
+          print("Bildirim silinemedi: $error");
         });
       }
     });
@@ -72,7 +89,7 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
         .then((querySnapshot) {
       for (var doc in querySnapshot.docs) {
         doc.reference.delete().catchError((error) {
-          print("Failed to delete order: $error");
+          print("Sipariş silinemedi: $error");
         });
       }
     });
@@ -169,7 +186,9 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                       ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   } else if (notificationSnapshot.hasError) {
-                    return Center(child: Text('Bir hata oluştu: ${notificationSnapshot.error}'));
+                    return Center(
+                        child: Text(
+                            'Bir hata oluştu: ${notificationSnapshot.error}'));
                   } else if (!notificationSnapshot.hasData ||
                       notificationSnapshot.data!.docs.isEmpty) {
                     return const Center(child: Text('Henüz bildirim yok.'));
@@ -177,12 +196,14 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                     return ListView.builder(
                       itemCount: notificationSnapshot.data!.docs.length,
                       itemBuilder: (context, index) {
-                        var notification = notificationSnapshot.data!.docs[index];
+                        var notification =
+                            notificationSnapshot.data!.docs[index];
                         var data = notification.data() as Map<String, dynamic>;
                         bool isChecked = data['checked'] ?? false;
                         String timestamp = formatTimestamp(data['timestamp']);
 
                         return Card(
+                          color: isChecked ? Colors.grey[300] : Colors.white,
                           child: ListTile(
                             title: Text(
                               data['message'] ?? '',
@@ -196,7 +217,8 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                             trailing: Checkbox(
                               value: isChecked,
                               onChanged: (bool? value) {
-                                updateNotificationChecked(notification.id, value ?? false);
+                                updateNotificationChecked(
+                                    notification.id, value ?? false);
                               },
                             ),
                           ),
@@ -238,7 +260,8 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                       ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   } else if (orderSnapshot.hasError) {
-                    return Center(child: Text('Bir hata oluştu: ${orderSnapshot.error}'));
+                    return Center(
+                        child: Text('Bir hata oluştu: ${orderSnapshot.error}'));
                   } else if (!orderSnapshot.hasData ||
                       orderSnapshot.data!.docs.isEmpty) {
                     return const Center(child: Text('Henüz sipariş yok.'));
@@ -252,11 +275,17 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                         int quantity = data['quantity'] ?? 1;
                         String timestamp = formatTimestamp(data['timestamp']);
 
+                        bool quantityChanged =
+                            initialQuantities.containsKey(order.id) &&
+                                initialQuantities[order.id] != quantity;
                         return Card(
+                          color: isChecked ? Colors.grey[300] : Colors.white,
                           child: ListTile(
                             title: Text(
                               '${data['name']} - Adet: $quantity',
                               style: TextStyle(
+                                color:
+                                    quantityChanged ? Colors.red : Colors.black,
                                 fontWeight: isChecked
                                     ? FontWeight.normal
                                     : FontWeight.bold,
@@ -285,7 +314,8 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => PastOrdersScreen(tableNumber: widget.tableNumber),
+                      builder: (context) =>
+                          PastOrdersScreen(tableNumber: widget.tableNumber),
                     ),
                   );
                 },
