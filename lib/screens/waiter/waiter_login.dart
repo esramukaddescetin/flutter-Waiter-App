@@ -24,12 +24,12 @@ class _StaffLoginPageState extends State<WaiterLogin> {
               Colors.white60,
             ),
             child: Padding(
-              padding: EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(20.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Text(
+                  const Text(
                     'Giriş',
                     style: TextStyle(
                       fontSize: 24.0,
@@ -37,26 +37,26 @@ class _StaffLoginPageState extends State<WaiterLogin> {
                       color: Colors.white,
                     ),
                   ),
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
                   TextField(
                     controller: _emailController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Email',
                       prefixIcon: Icon(Icons.person, color: Colors.white),
                       labelStyle: TextStyle(color: Colors.white),
                     ),
                   ),
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
                   TextField(
                     controller: _passwordController,
                     obscureText: true,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Şifre',
                       prefixIcon: Icon(Icons.lock, color: Colors.white),
                       labelStyle: TextStyle(color: Colors.white),
                     ),
                   ),
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       elevation: 12,
@@ -66,24 +66,23 @@ class _StaffLoginPageState extends State<WaiterLogin> {
                       String email = _emailController.text.trim();
                       String password = _passwordController.text.trim();
 
-                      // E-posta ve şifre boş mu kontrol edilir
+                      
                       if (email.isEmpty || password.isEmpty) {
-                        // Eğer boşluk kaldırılmış e-posta ve şifre boşsa, hata mesajı gösterilir
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text('Lütfen e-posta ve şifreyi girin.'),
                         ));
                       } else {
-                        // E-posta ve şifre boş değilse, giriş yapma işlemi başlatılır
+                        
                         locator
                             .get<AuthService>()
                             .waiterSignIn(context, email, password);
                       }
                     },
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 40),
-                      child: Text(
+                      padding: const EdgeInsets.symmetric(horizontal: 40),
+                      child: const Text(
                         'Giriş',
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
                         ),

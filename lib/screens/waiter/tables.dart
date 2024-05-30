@@ -13,44 +13,59 @@ class TableDetailsPage extends StatefulWidget {
 }
 
 class _TableDetailsPageState extends State<TableDetailsPage> {
+  int selectedTableNumber = 0;
+
   @override
   void initState() {
     super.initState();
-    getNotificationsFromFirebase();
-  }
-
-  void getNotificationsFromFirebase() async {
-    try {
-      QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
-          .instance
-          .collection('notifications')
-          .where('tableNumber', isEqualTo: widget.tableNumber)
-          .orderBy('timestamp', descending: true)
-          .get();
-
-      if (snapshot.docs.isNotEmpty) {
-        snapshot.docs.forEach((doc) {
-          String message = doc['message'];
-          print('Bildirim: $message');
-        });
-      } else {
-        print('Henüz bildirim yok.');
-      }
-    } catch (e) {
-      print('Hata oluştu: $e');
-    }
+    selectedTableNumber = widget.tableNumber;
   }
 
   void updateNotificationChecked(String docId, bool isChecked) {
     FirebaseFirestore.instance.collection('notifications').doc(docId).update({
       'checked': isChecked,
+    }).catchError((error) {
+      print("Failed to update notification: $error");
     });
   }
 
   void updateOrderChecked(String docId, bool isChecked) {
     FirebaseFirestore.instance.collection('orders').doc(docId).update({
       'checked': isChecked,
+    }).catchError((error) {
+      print("Failed to update order: $error");
     });
+  }
+
+  void clearTableData(int tableNumber) {
+    FirebaseFirestore.instance
+        .collection('notifications')
+        .where('tableNumber', isEqualTo: tableNumber)
+        .get()
+        .then((querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        doc.reference.delete().catchError((error) {
+          print("Failed to delete notification: $error");
+        });
+      }
+    });
+
+    FirebaseFirestore.instance
+        .collection('orders')
+        .where('tableNumber', isEqualTo: tableNumber)
+        .get()
+        .then((querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        doc.reference.delete().catchError((error) {
+          print("Failed to delete order: $error");
+        });
+      }
+    });
+  }
+
+  String formatTimestamp(Timestamp timestamp) {
+    DateTime dateTime = timestamp.toDate();
+    return '${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
   }
 
   @override
@@ -65,24 +80,55 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
               color: Colors.pink[800],
               fontFamily: 'MadimiOne'),
         ),
-        backgroundColor: Color(0xFFEF9A9A), // App bar arka plan rengi
+        backgroundColor: const Color(0xFFEF9A9A),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.cleaning_services),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text('Masa Temizleme'),
+                  content: Text(
+                      'Masa ${widget.tableNumber} için tüm siparişleri ve bildirimleri silmek istediğinizden emin misiniz?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text('İptal'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        clearTableData(widget.tableNumber);
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      },
+                      child: Text('Evet'),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: Container(
         decoration: WidgetBackcolor(
-          Color(0xFFEF9A9A),
+          const Color(0xFFEF9A9A),
           Colors.white,
         ),
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
                 children: [
                   Icon(Icons.notifications, size: 24, color: Colors.pink[700]),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Text(
                     'İstekler',
                     style: TextStyle(
@@ -94,7 +140,7 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                 ],
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Expanded(
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
@@ -106,61 +152,57 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                     AsyncSnapshot<QuerySnapshot> notificationSnapshot) {
                   if (notificationSnapshot.connectionState ==
                       ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (notificationSnapshot.hasError) {
+                    return Center(
+                        child: Text(
+                            'Bir hata oluştu: ${notificationSnapshot.error}'));
+                  } else if (!notificationSnapshot.hasData ||
+                      notificationSnapshot.data!.docs.isEmpty) {
+                    return const Center(child: Text('Henüz bildirim yok.'));
                   } else {
-                    if (notificationSnapshot.hasData &&
-                        notificationSnapshot.data!.docs.isNotEmpty) {
-                      return ListView.builder(
-                        itemCount: notificationSnapshot.data!.docs.length,
-                        itemBuilder: (context, index) {
-                          var notification =
-                              notificationSnapshot.data!.docs[index];
-                          var data = notification.data() as Map<String, dynamic>;
-                          bool isChecked = data.containsKey('checked') ? data['checked'] : false;
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4),
-                            child: Card(
-                              elevation: 3,
-                              child: ListTile(
-                                leading: Checkbox(
-                                  value: isChecked,
-                                  onChanged: (bool? value) {
-                                    updateNotificationChecked(
-                                        notification.id, value!);
-                                  },
-                                ),
-                                title: Text(notification['message']),
-                                subtitle: Text(
-                                  'İstek',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                    return ListView.builder(
+                      itemCount: notificationSnapshot.data!.docs.length,
+                      itemBuilder: (context, index) {
+                        var notification =
+                            notificationSnapshot.data!.docs[index];
+                        var data = notification.data() as Map<String, dynamic>;
+                        bool isChecked = data['checked'] ?? false;
+                        String timestamp = formatTimestamp(data['timestamp']);
+
+                        return Card(
+                          child: ListTile(
+                            title: Text(
+                              data['message'] ?? '',
+                              style: TextStyle(
+                                fontWeight: isChecked
+                                    ? FontWeight.normal
+                                    : FontWeight.bold,
                               ),
                             ),
-                          );
-                        },
-                      );
-                    } else {
-                      return Center(
-                        child: Text(
-                          'Henüz bildirim yok.',
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      );
-                    }
+                            subtitle: Text(timestamp),
+                            trailing: Checkbox(
+                              value: isChecked,
+                              onChanged: (bool? value) {
+                                updateNotificationChecked(
+                                    notification.id, value ?? false);
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                    );
                   }
                 },
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
                 children: [
                   Icon(Icons.shopping_cart, size: 24, color: Colors.pink[700]),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Text(
                     'Siparişler',
                     style: TextStyle(
@@ -172,73 +214,55 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                 ],
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Expanded(
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection('orders')
                     .where('tableNumber', isEqualTo: widget.tableNumber)
+                    .orderBy('timestamp', descending: true)
                     .snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> orderSnapshot) {
                   if (orderSnapshot.connectionState ==
                       ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (orderSnapshot.hasError) {
+                    return Center(
+                        child: Text('Bir hata oluştu: ${orderSnapshot.error}'));
+                  } else if (!orderSnapshot.hasData ||
+                      orderSnapshot.data!.docs.isEmpty) {
+                    return const Center(child: Text('Henüz sipariş yok.'));
                   } else {
-                    if (orderSnapshot.hasData &&
-                        orderSnapshot.data!.docs.isNotEmpty) {
-                      Map<String, dynamic> uniqueOrders = {};
-                      orderSnapshot.data!.docs.forEach((doc) {
-                        String productName = doc['name'];
-                        var data = doc.data() as Map<String, dynamic>;
-                        if (uniqueOrders.containsKey(productName)) {
-                          uniqueOrders[productName]['quantity'] += data['quantity'];
-                        } else {
-                          uniqueOrders[productName] = {
-                            'quantity': data['quantity'],
-                            'name': data['name'],
-                            'id': doc.id,
-                            'checked': data.containsKey('checked') ? data['checked'] : false,
-                          };
-                        }
-                      });
-                      return ListView.builder(
-                        itemCount: uniqueOrders.length,
-                        itemBuilder: (context, index) {
-                          String productName =
-                              uniqueOrders.keys.elementAt(index);
-                          var order = uniqueOrders[productName];
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4),
-                            child: Card(
-                              elevation: 3,
-                              child: ListTile(
-                                leading: Checkbox(
-                                  value: order['checked'],
-                                  onChanged: (bool? value) {
-                                    updateOrderChecked(order['id'], value!);
-                                  },
-                                ),
-                                title: Text(order['name']),
-                                subtitle: Text(
-                                  'Miktar: ${order['quantity']}',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                    return ListView.builder(
+                      itemCount: orderSnapshot.data!.docs.length,
+                      itemBuilder: (context, index) {
+                        var order = orderSnapshot.data!.docs[index];
+                        var data = order.data() as Map<String, dynamic>;
+                        bool isChecked = data['checked'] ?? false;
+                        int quantity = data['quantity'] ?? 1;
+                        String timestamp = formatTimestamp(data['timestamp']);
+
+                        return Card(
+                          child: ListTile(
+                            title: Text(
+                              '${data['name']} - Adet: $quantity',
+                              style: TextStyle(
+                                fontWeight: isChecked
+                                    ? FontWeight.normal
+                                    : FontWeight.bold,
                               ),
                             ),
-                          );
-                        },
-                      );
-                    } else {
-                      return Center(
-                        child: Text(
-                          'Bu masa için henüz sipariş yok.',
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      );
-                    }
+                            subtitle: Text(timestamp),
+                            trailing: Checkbox(
+                              value: isChecked,
+                              onChanged: (bool? value) {
+                                updateOrderChecked(order.id, value ?? false);
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                    );
                   }
                 },
               ),
@@ -248,4 +272,12 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
       ),
     );
   }
+}
+
+void main() {
+  int tableNumber = 1;
+  runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: TableDetailsPage(tableNumber: tableNumber),
+  ));
 }

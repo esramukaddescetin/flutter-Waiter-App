@@ -8,6 +8,7 @@ class AuthService {
   final _firestore = FirebaseFirestore.instance;
   final waiterCollection = FirebaseFirestore.instance.collection('waiters');
   final firebaseAuth = FirebaseAuth.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   Future<void> signUp({
     required String email,
@@ -74,6 +75,26 @@ class AuthService {
     }
   }
 
+  Future<void> addTable(String tableNumber) async {
+    try {
+      int tableNo = int.parse(tableNumber); // tableNumber'ı sayıya dönüştür
+      await _db.collection('tables').doc('table_$tableNo').set({
+        'tableNumber': tableNo, // Sayısal olarak kaydet
+      });
+      print('Masa $tableNumber eklendi.');
+    } catch (e) {
+      print('Hata oluştu: $e');
+    }
+  }
+
+  Future<void> deleteTable(int tableNumber) async {
+    try {
+      await _db.collection('tables').doc('table_$tableNumber').delete();
+      print('Masa $tableNumber silindi.');
+    } catch (e) {
+      print('Hata oluştu: $e');
+    }
+  }
   Future<void> adminSignIn(
       BuildContext context, String email, String password) async {
     try {
