@@ -16,6 +16,28 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
   int selectedTableNumber = 0;
   Map<String, int> initialQuantities = {};
 
+  // State variables to track the visibility of each list
+  bool notificationsVisible = true;
+  bool requestsVisible = false;
+  bool ordersVisible = false;
+
+  // Function to toggle the visibility of each list
+  void toggleListVisibility(String listType) {
+    setState(() {
+      switch (listType) {
+        case 'notifications':
+          notificationsVisible = !notificationsVisible;
+          break;
+        case 'requests':
+          requestsVisible = !requestsVisible;
+          break;
+        case 'orders':
+          ordersVisible = !ordersVisible;
+          break;
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -43,6 +65,14 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
       'checked': isChecked,
     }).catchError((error) {
       print("Bildirim güncellenemedi: $error");
+    });
+  }
+
+  void updateRequestChecked(String docId, bool isChecked) {
+    FirebaseFirestore.instance.collection('waiter_requests').doc(docId).update({
+      'checked': isChecked,
+    }).catchError((error) {
+      print("Talep güncellenemedi: $error");
     });
   }
 
@@ -93,6 +123,18 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
         });
       }
     });
+
+    FirebaseFirestore.instance
+        .collection('waiter_requests')
+        .where('tableNumber', isEqualTo: tableNumber)
+        .get()
+        .then((querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        doc.reference.delete().catchError((error) {
+          print("Talep silinemedi: $error");
+        });
+      }
+    });
   }
 
   String formatTimestamp(Timestamp timestamp) {
@@ -115,12 +157,12 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
         backgroundColor: const Color(0xFFEF9A9A),
         actions: [
           IconButton(
-            icon: Icon(Icons.cleaning_services),
+            icon: const Icon(Icons.cleaning_services),
             onPressed: () {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: Text('Masa Temizleme'),
+                  title: const Text('Masa Temizleme'),
                   content: Text(
                       'Masa ${widget.tableNumber} için tüm siparişleri ve bildirimleri silmek istediğinizden emin misiniz?'),
                   actions: [
@@ -128,7 +170,7 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: Text('İptal'),
+                      child: const Text('İptal'),
                     ),
                     TextButton(
                       onPressed: () {
@@ -136,7 +178,7 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                         Navigator.pop(context);
                         Navigator.pop(context);
                       },
-                      child: Text('Evet'),
+                      child: const Text('Evet'),
                     ),
                   ],
                 ),
@@ -162,7 +204,7 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                   Icon(Icons.notifications, size: 24, color: Colors.pink[700]),
                   const SizedBox(width: 8),
                   Text(
-                    'İstekler',
+                    'Bildirimler',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -234,6 +276,95 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Row(
                 children: [
+                  Icon(Icons.notifications, size: 24, color: Colors.pink[700]),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Talepler',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.pink[700],
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.arrow_drop_down_circle),
+                    onPressed: () {
+                      toggleListVisibility('requests');
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Visibility(
+              visible: requestsVisible,
+              child: Expanded(
+                child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('waiter_requests')
+                      .where('tableNumber', isEqualTo: widget.tableNumber)
+                      .orderBy('timestamp', descending: true)
+                      .snapshots(),
+                  builder:
+                      (context, AsyncSnapshot<QuerySnapshot> requestSnapshot) {
+                    if (requestSnapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (requestSnapshot.hasError) {
+                      return Center(
+                          child: Text(
+                              'Bir hata oluştu: ${requestSnapshot.error}'));
+                    } else if (!requestSnapshot.hasData ||
+                        requestSnapshot.data!.docs.isEmpty) {
+                      return const Center(child: Text('Henüz talep yok.'));
+                    } else {
+                      return ListView.builder(
+                        itemCount: requestSnapshot.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          var request = requestSnapshot.data!.docs[index];
+                          var data = request.data() as Map<String, dynamic>;
+                          String title = data['title'] ?? '';
+                          String requestText = data['request'] ?? '';
+                          Timestamp timestamp = data['timestamp'];
+                          String formattedTimestamp =
+                              formatTimestamp(timestamp);
+                          bool isChecked = data['checked'] ?? false;
+                          return Card(
+                            color: isChecked ? Colors.grey[300] : Colors.white,
+                            child: ListTile(
+                              title: Text(
+                                title,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(requestText),
+                                  Text(formattedTimestamp),
+                                ],
+                              ),
+                              trailing: Checkbox(
+                                value: isChecked,
+                                onChanged: (bool? value) {
+                                  updateRequestChecked(
+                                      request.id, value ?? false);
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    }
+                  },
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                children: [
                   Icon(Icons.shopping_cart, size: 24, color: Colors.pink[700]),
                   const SizedBox(width: 8),
                   Text(
@@ -244,66 +375,77 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                       color: Colors.pink[700],
                     ),
                   ),
+                  IconButton(
+                    icon: Icon(Icons.arrow_drop_down_circle),
+                    onPressed: () {
+                      toggleListVisibility('orders');
+                    },
+                  ),
                 ],
               ),
             ),
-            const SizedBox(height: 8),
-            Expanded(
-              child: StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection('orders')
-                    .where('tableNumber', isEqualTo: widget.tableNumber)
-                    .orderBy('timestamp', descending: true)
-                    .snapshots(),
-                builder: (context, AsyncSnapshot<QuerySnapshot> orderSnapshot) {
-                  if (orderSnapshot.connectionState ==
-                      ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (orderSnapshot.hasError) {
-                    return Center(
-                        child: Text('Bir hata oluştu: ${orderSnapshot.error}'));
-                  } else if (!orderSnapshot.hasData ||
-                      orderSnapshot.data!.docs.isEmpty) {
-                    return const Center(child: Text('Henüz sipariş yok.'));
-                  } else {
-                    return ListView.builder(
-                      itemCount: orderSnapshot.data!.docs.length,
-                      itemBuilder: (context, index) {
-                        var order = orderSnapshot.data!.docs[index];
-                        var data = order.data() as Map<String, dynamic>;
-                        bool isChecked = data['checked'] ?? false;
-                        int quantity = data['quantity'] ?? 1;
-                        String timestamp = formatTimestamp(data['timestamp']);
+            Visibility(
+              visible: ordersVisible,
+              child: Expanded(
+                child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('orders')
+                      .where('tableNumber', isEqualTo: widget.tableNumber)
+                      .orderBy('timestamp', descending: true)
+                      .snapshots(),
+                  builder:
+                      (context, AsyncSnapshot<QuerySnapshot> orderSnapshot) {
+                    if (orderSnapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (orderSnapshot.hasError) {
+                      return Center(
+                          child:
+                              Text('Bir hata oluştu: ${orderSnapshot.error}'));
+                    } else if (!orderSnapshot.hasData ||
+                        orderSnapshot.data!.docs.isEmpty) {
+                      return const Center(child: Text('Henüz sipariş yok.'));
+                    } else {
+                      return ListView.builder(
+                        itemCount: orderSnapshot.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          var order = orderSnapshot.data!.docs[index];
+                          var data = order.data() as Map<String, dynamic>;
+                          bool isChecked = data['checked'] ?? false;
+                          int quantity = data['quantity'] ?? 1;
+                          String timestamp = formatTimestamp(data['timestamp']);
 
-                        bool quantityChanged =
-                            initialQuantities.containsKey(order.id) &&
-                                initialQuantities[order.id] != quantity;
-                        return Card(
-                          color: isChecked ? Colors.grey[300] : Colors.white,
-                          child: ListTile(
-                            title: Text(
-                              '${data['name']} - Adet: $quantity',
-                              style: TextStyle(
-                                color:
-                                    quantityChanged ? Colors.red : Colors.black,
-                                fontWeight: isChecked
-                                    ? FontWeight.normal
-                                    : FontWeight.bold,
+                          bool quantityChanged =
+                              initialQuantities.containsKey(order.id) &&
+                                  initialQuantities[order.id] != quantity;
+                          return Card(
+                            color: isChecked ? Colors.grey[300] : Colors.white,
+                            child: ListTile(
+                              title: Text(
+                                '${data['name']} - Adet: $quantity',
+                                style: TextStyle(
+                                  color: quantityChanged
+                                      ? Colors.red
+                                      : Colors.black,
+                                  fontWeight: isChecked
+                                      ? FontWeight.normal
+                                      : FontWeight.bold,
+                                ),
+                              ),
+                              subtitle: Text(timestamp),
+                              trailing: Checkbox(
+                                value: isChecked,
+                                onChanged: (bool? value) {
+                                  updateOrderChecked(order.id, value ?? false);
+                                },
                               ),
                             ),
-                            subtitle: Text(timestamp),
-                            trailing: Checkbox(
-                              value: isChecked,
-                              onChanged: (bool? value) {
-                                updateOrderChecked(order.id, value ?? false);
-                              },
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  }
-                },
+                          );
+                        },
+                      );
+                    }
+                  },
+                ),
               ),
             ),
             const SizedBox(height: 16),
