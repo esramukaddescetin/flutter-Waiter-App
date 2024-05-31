@@ -21,23 +21,6 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
   bool requestsVisible = false;
   bool ordersVisible = false;
 
-  // Function to toggle the visibility of each list
-  void toggleListVisibility(String listType) {
-    setState(() {
-      switch (listType) {
-        case 'notifications':
-          notificationsVisible = !notificationsVisible;
-          break;
-        case 'requests':
-          requestsVisible = !requestsVisible;
-          break;
-        case 'orders':
-          ordersVisible = !ordersVisible;
-          break;
-      }
-    });
-  }
-
   @override
   void initState() {
     super.initState();
@@ -142,6 +125,97 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
     return '${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
   }
 
+  void toggleListVisibility(String listType) {
+    setState(() {
+      switch (listType) {
+        case 'notifications':
+          notificationsVisible = !notificationsVisible;
+          break;
+        case 'requests':
+          requestsVisible = !requestsVisible;
+          if (requestsVisible) {
+            showRequestsDialog(context);
+          }
+          break;
+        case 'orders':
+          ordersVisible = !ordersVisible;
+          break;
+      }
+    });
+  }
+
+  void showRequestsDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Talepler'),
+          content: StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection('waiter_requests')
+                .where('tableNumber', isEqualTo: widget.tableNumber)
+                .orderBy('timestamp', descending: true)
+                .snapshots(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text('Bir hata oluştu: ${snapshot.error}');
+              } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                return Text('Henüz talep yok.');
+              } else {
+                return ListView.builder(
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (context, index) {
+                    var request = snapshot.data!.docs[index];
+                    var data = request.data() as Map<String, dynamic>;
+                    String title = data['title'] ?? '';
+                    String requestText = data['request'] ?? '';
+                    Timestamp timestamp = data['timestamp'];
+                    String formattedTimestamp = formatTimestamp(timestamp);
+                    bool isChecked = data['checked'] ?? false;
+                    return Card(
+                      color: isChecked ? Colors.grey[300] : Colors.white,
+                      child: ListTile(
+                        title: Text(
+                          title,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(requestText),
+                            Text(formattedTimestamp),
+                          ],
+                        ),
+                        trailing: Checkbox(
+                          value: isChecked,
+                          onChanged: (bool? value) {
+                            updateRequestChecked(request.id, value ?? false);
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                );
+              }
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Kapat'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -243,7 +317,6 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                         var data = notification.data() as Map<String, dynamic>;
                         bool isChecked = data['checked'] ?? false;
                         String timestamp = formatTimestamp(data['timestamp']);
-
                         return Card(
                           color: isChecked ? Colors.grey[300] : Colors.white,
                           child: ListTile(
@@ -414,7 +487,6 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                           bool isChecked = data['checked'] ?? false;
                           int quantity = data['quantity'] ?? 1;
                           String timestamp = formatTimestamp(data['timestamp']);
-
                           bool quantityChanged =
                               initialQuantities.containsKey(order.id) &&
                                   initialQuantities[order.id] != quantity;
