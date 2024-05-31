@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:waiter_app/screens/waiter/tables.dart';
+import 'package:waiter_app/screens/waiter/panel/tables.dart';
 
 class WaiterPanel extends StatefulWidget {
   @override

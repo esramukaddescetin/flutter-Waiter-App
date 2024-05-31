@@ -3,6 +3,7 @@ import 'package:waiter_app/screens/admin/member/member_list.dart';
 import 'package:waiter_app/screens/admin/menu/menu_management.dart';
 import 'package:waiter_app/screens/admin/register.dart';
 import 'package:waiter_app/screens/admin/table_management.dart';
+import 'package:waiter_app/screens/admin/waiter/waiter_list.dart';
 import 'menu/menu_list.dart';
 
 import '../../my_widgets.dart';
@@ -84,9 +85,30 @@ class AdminDashboard extends StatelessWidget {
                 ),
               ],
             ),
-            ListTile(
+            ExpansionTile(
               title: const Text('Garson Yönetimi'),
-              onTap: () {},
+              children: [
+                ListTile(
+                  title: const Text('Garson Listesi'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => WaiterListScreen()),
+                    );
+                  },
+                ),
+                ListTile(
+                  title: const Text('Garson Ekle'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => RegisterScreen()),
+                    );
+                  },
+                ),
+              ],
             ),
             ListTile(
               title: const Text('Müşteri Yönetimi'),

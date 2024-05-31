@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:waiter_app/screens/waiter/orders/past_orders.dart';
-import '../../my_widgets.dart';
+import '../../../my_widgets.dart';
 
 class TableDetailsPage extends StatefulWidget {
   final int tableNumber;

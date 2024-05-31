@@ -7,7 +7,8 @@ import 'package:waiter_app/screens/admin/menu/menu_list.dart';
 import 'package:waiter_app/screens/admin/menu/menu_management.dart';
 import 'package:waiter_app/screens/admin/register.dart';
 import 'package:waiter_app/screens/admin/table_management.dart';
-import 'package:waiter_app/screens/waiter/waiter_panel.dart';
+import 'package:waiter_app/screens/admin/waiter/waiter_list.dart';
+import 'package:waiter_app/screens/waiter/panel/waiter_panel.dart';
 import 'package:waiter_app/services/provider/auth_provider.dart';
 
 
@@ -56,6 +57,7 @@ class WaiterApp extends StatelessWidget {
         '/menuListScreen': (context) => MenuListScreen(),
         '/memberListScreen': (context) => UserListScreen(),
         '/editUserScreen': (context) => EditUserScreen(userData: {}, userId: '',),
+        '/waiterListScreen': (context) => WaiterListScreen(),
       },
     );
   }

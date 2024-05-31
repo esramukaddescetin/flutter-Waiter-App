@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:waiter_app/screens/admin/dashboard_screen.dart';
-import 'package:waiter_app/screens/waiter/waiter_panel.dart';
+import 'package:waiter_app/screens/waiter/panel/waiter_panel.dart';
 
 class AuthService {
   final _firestore = FirebaseFirestore.instance;
