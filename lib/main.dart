@@ -1,12 +1,15 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:waiter_app/screens/admin/admin_management.dart/admin_edit.dart';
+import 'package:waiter_app/screens/admin/admin_management.dart/admin_list.dart';
 import 'package:waiter_app/screens/admin/member/member_edit.dart';
 import 'package:waiter_app/screens/admin/member/member_list.dart';
 import 'package:waiter_app/screens/admin/menu/menu_list.dart';
 import 'package:waiter_app/screens/admin/menu/menu_management.dart';
 import 'package:waiter_app/screens/admin/register.dart';
 import 'package:waiter_app/screens/admin/table_management.dart';
+import 'package:waiter_app/screens/admin/waiter/waiter_edit.dart';
 import 'package:waiter_app/screens/admin/waiter/waiter_list.dart';
 import 'package:waiter_app/screens/waiter/panel/waiter_panel.dart';
 import 'package:waiter_app/services/provider/auth_provider.dart';
@@ -58,6 +61,9 @@ class WaiterApp extends StatelessWidget {
         '/memberListScreen': (context) => UserListScreen(),
         '/editUserScreen': (context) => EditUserScreen(userData: {}, userId: '',),
         '/waiterListScreen': (context) => WaiterListScreen(),
+        '/editWaiterScreen': (context) => WaiterEditScreen(waiterData: {}, waiterId: '',),
+        '/adminListScreen': (context) => AdminListScreen(),
+        '/editAdminScreen': (context) => AdminEditScreen(adminData: {}, adminId: '',),
       },
     );
   }

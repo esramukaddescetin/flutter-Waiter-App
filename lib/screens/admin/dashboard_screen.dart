@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:waiter_app/screens/admin/admin_management.dart/admin_list.dart';
 import 'package:waiter_app/screens/admin/member/member_list.dart';
 import 'package:waiter_app/screens/admin/menu/menu_management.dart';
 import 'package:waiter_app/screens/admin/register.dart';
@@ -110,9 +111,30 @@ class AdminDashboard extends StatelessWidget {
                 ),
               ],
             ),
-            ListTile(
-              title: const Text('Müşteri Yönetimi'),
-              onTap: () {},
+            ExpansionTile(
+              title: const Text('Admin Yönetimi'),
+              children: [
+                ListTile(
+                  title: const Text('Admin Listesi'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AdminListScreen()),
+                    );
+                  },
+                ),
+                ListTile(
+                  title: const Text('Admin Ekle'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => RegisterScreen()),
+                    );
+                  },
+                ),
+              ],
             ),
             ListTile(
               title: const Text('Masa Yönetimi'),
