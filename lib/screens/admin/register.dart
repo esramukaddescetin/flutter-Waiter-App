@@ -55,7 +55,7 @@ class RegisterScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.lightGreen,
-        title: Text(
+        title: const Text(
           'Üye Yönetimi',
           style: TextStyle(
             color: Colors.white,
@@ -85,25 +85,25 @@ class RegisterScreen extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   inputField(
                     _tName,
                     Icons.person,
                     'Ad',
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   inputField(
                     _tLastName,
                     Icons.person,
                     'Soyad',
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   inputField(
                     _tEmail,
                     Icons.email,
                     'Email',
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   TextFormField(
                     controller: _tPhone,
                     keyboardType: TextInputType.phone,
@@ -113,7 +113,7 @@ class RegisterScreen extends StatelessWidget {
                       PhoneInputFormatter(),
                     ],
                     decoration: InputDecoration(
-                      prefixIcon: Icon(
+                      prefixIcon: const Icon(
                         Icons.phone,
                       ),
                       hintText: 'Telefon Numarası',
@@ -124,13 +124,13 @@ class RegisterScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   inputField(
                     _tPassword,
                     Icons.lock,
                     'Şifre',
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   DropdownButtonFormField<String>(
                     value: _selectedRole,
                     onChanged: (String? newValue) {
@@ -144,7 +144,7 @@ class RegisterScreen extends StatelessWidget {
                       );
                     }).toList(),
                     decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.person),
+                      prefixIcon: const Icon(Icons.person),
                       hintText: 'Rol Seçin',
                       filled: true,
                       fillColor: Colors.white,
@@ -153,22 +153,23 @@ class RegisterScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
                         locator.get<AuthService>().signUp(
-                            roles: [_selectedRole],
-                            name: _tName.text,
-                            lastname: _tLastName.text,
-                            email: _tEmail.text,
-                            // phone: int.parse(_tPhone.text),
-                            phone: _tPhone.text,
-                            password: _tPassword.text);
+                          roles: [_selectedRole],
+                          name: _tName.text,
+                          lastname: _tLastName.text,
+                          email: _tEmail.text,
+                          phone: _tPhone.text,
+                          password: _tPassword.text,
+                        );
+                        _clearForm();
                       },
                       child:
-                          Text('KAYDET', style: TextStyle(color: Colors.white)),
+                          const Text('KAYDET', style: TextStyle(color: Colors.white)),
                       style: ElevatedButton.styleFrom(
                         //primary: Colors.deepPurple,
                         shape: RoundedRectangleBorder(
@@ -185,5 +186,13 @@ class RegisterScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _clearForm() {
+    _tName.clear();
+    _tLastName.clear();
+    _tEmail.clear();
+    _tPhone.clear();
+    _tPassword.clear();
   }
 }

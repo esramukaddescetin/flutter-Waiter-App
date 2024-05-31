@@ -73,10 +73,13 @@ class AdminDashboard extends StatelessWidget {
                   },
                 ),
                 ListTile(
-                  title: const Text('Yönetim Ayarları'),
+                  title: const Text('Üye ekle'),
                   onTap: () {
                     Navigator.pop(context);
-                    // Burada üye yönetim ayarları sayfasına yönlendirme yapılabilir.
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => RegisterScreen()),
+                    );
                   },
                 ),
               ],

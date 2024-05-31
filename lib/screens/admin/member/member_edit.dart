@@ -5,7 +5,8 @@ class EditUserScreen extends StatefulWidget {
   final String userId;
   final Map<String, dynamic> userData;
 
-  const EditUserScreen({Key? key, required this.userId, required this.userData}) : super(key: key);
+  const EditUserScreen({Key? key, required this.userId, required this.userData})
+      : super(key: key);
 
   @override
   _EditUserScreenState createState() => _EditUserScreenState();
@@ -22,11 +23,14 @@ class _EditUserScreenState extends State<EditUserScreen> {
   @override
   void initState() {
     super.initState();
-    _usernameController = TextEditingController(text: widget.userData['username']);
+    _usernameController =
+        TextEditingController(text: widget.userData['username']);
     _emailController = TextEditingController(text: widget.userData['email']);
     _nameController = TextEditingController(text: widget.userData['name']);
-    _lastNameController = TextEditingController(text: widget.userData['lastName']);
-    _passwordController = TextEditingController(text: widget.userData['password']);
+    _lastNameController =
+        TextEditingController(text: widget.userData['lastName']);
+    _passwordController =
+        TextEditingController(text: widget.userData['password']);
     _phoneController = TextEditingController(text: widget.userData['phone']);
   }
 
@@ -45,43 +49,43 @@ class _EditUserScreenState extends State<EditUserScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Kullanıcı Düzenleme'),
+        title: const Text('Kullanıcı Düzenleme'),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             TextFormField(
               controller: _usernameController,
-              decoration: InputDecoration(labelText: 'Kullanıcı Adı'),
+              decoration: const InputDecoration(labelText: 'Kullanıcı Adı'),
             ),
             TextFormField(
               controller: _emailController,
-              decoration: InputDecoration(labelText: 'Email'),
+              decoration: const InputDecoration(labelText: 'Email'),
             ),
             TextFormField(
               controller: _nameController,
-              decoration: InputDecoration(labelText: 'İsim'),
+              decoration: const InputDecoration(labelText: 'İsim'),
             ),
             TextFormField(
               controller: _lastNameController,
-              decoration: InputDecoration(labelText: 'Soyisim'),
+              decoration: const InputDecoration(labelText: 'Soyisim'),
             ),
             TextFormField(
               controller: _passwordController,
-              decoration: InputDecoration(labelText: 'Şifre'),
+              decoration: const InputDecoration(labelText: 'Şifre'),
             ),
             TextFormField(
               controller: _phoneController,
-              decoration: InputDecoration(labelText: 'Telefon'),
+              decoration: const InputDecoration(labelText: 'Telefon'),
             ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: () {
                 _saveChanges();
               },
-              child: Text('Değişiklikleri Kaydet'),
+              child: const Text('Değişiklikleri Kaydet'),
             ),
           ],
         ),
@@ -104,14 +108,13 @@ class _EditUserScreenState extends State<EditUserScreen> {
         .doc(widget.userId)
         .update(updatedUserData)
         .then((_) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Kullanıcı bilgileri güncellendi')),
-          );
-        })
-        .catchError((error) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Güncelleme işlemi başarısız oldu: $error')),
-          );
-        });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Kullanıcı bilgileri güncellendi')),
+      );
+    }).catchError((error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Güncelleme işlemi başarısız oldu: $error')),
+      );
+    });
   }
 }

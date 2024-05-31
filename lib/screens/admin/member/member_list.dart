@@ -10,7 +10,7 @@ class UserListScreen extends StatelessWidget {
         title: const Text('Kullanıcı Listesi'),
       ),
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('users').where('role', isEqualTo: 'user').snapshots(),
+        stream: FirebaseFirestore.instance.collection('users').snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -19,15 +19,26 @@ class UserListScreen extends StatelessWidget {
             return const Center(child: Text('Kullanıcı bulunamadı.'));
           }
           final users = snapshot.data!.docs;
+          final filteredUsers = users.where((user) {
+            final userData = user.data() as Map<String,
+                dynamic>?; 
+            final role = userData?['roles']
+                as List<dynamic>?; 
+            return role != null &&
+                role.contains(
+                    'User'); 
+          }).toList();
+
           return ListView.builder(
-            itemCount: users.length,
+            itemCount: filteredUsers.length,
             itemBuilder: (context, index) {
-              final userData = users[index].data() as Map<String, dynamic>;
-              final username = userData['username'] ?? ''; 
-              final email = userData['email'] ?? ''; 
-              final name = userData['name'] ?? ''; 
-              final lastName = userData['lastName'] ?? ''; 
-              final password = userData['password'] ?? ''; 
+              final userData =
+                  filteredUsers[index].data() as Map<String, dynamic>;
+              final username = userData['username'] ?? '';
+              final email = userData['email'] ?? '';
+              final name = userData['name'] ?? '';
+              final lastName = userData['lastName'] ?? '';
+              final password = userData['password'] ?? '';
               final phone = userData['phone'] ?? '';
               return ListTile(
                 title: Text(username),
@@ -52,7 +63,7 @@ class UserListScreen extends StatelessWidget {
                           MaterialPageRoute(
                             builder: (context) => EditUserScreen(
                               userData: userData,
-                              userId: users[index].id,
+                              userId: filteredUsers[index].id,
                             ),
                           ),
                         );
@@ -61,7 +72,7 @@ class UserListScreen extends StatelessWidget {
                     IconButton(
                       icon: const Icon(Icons.delete),
                       onPressed: () {
-                        _confirmDeleteUser(context, users[index].id);
+                        _confirmDeleteUser(context, filteredUsers[index].id);
                       },
                     ),
                   ],
@@ -80,7 +91,8 @@ class UserListScreen extends StatelessWidget {
       builder: (context) {
         return AlertDialog(
           title: const Text('Kullanıcıyı Sil'),
-          content: const Text('Bu kullanıcıyı silmek istediğinizden emin misiniz?'),
+          content:
+              const Text('Bu kullanıcıyı silmek istediğinizden emin misiniz?'),
           actions: [
             TextButton(
               onPressed: () {
