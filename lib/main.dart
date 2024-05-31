@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:waiter_app/screens/admin/member/member_edit.dart';
+import 'package:waiter_app/screens/admin/member/member_list.dart';
 import 'package:waiter_app/screens/admin/menu/menu_list.dart';
 import 'package:waiter_app/screens/admin/menu/menu_management.dart';
 import 'package:waiter_app/screens/admin/register.dart';
@@ -52,6 +54,8 @@ class WaiterApp extends StatelessWidget {
         '/menuManagementScreen': (context) => MenuManagementScreen(),
         '/tableManagementScreen': (context) => TableManagementScreen(),
         '/menuListScreen': (context) => MenuListScreen(),
+        '/memberListScreen': (context) => UserListScreen(),
+        '/editUserScreen': (context) => EditUserScreen(userData: {}, userId: '',),
       },
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:waiter_app/screens/admin/member/member_list.dart';
 import 'package:waiter_app/screens/admin/menu/menu_management.dart';
 import 'package:waiter_app/screens/admin/register.dart';
 import 'package:waiter_app/screens/admin/table_management.dart';
@@ -41,8 +42,7 @@ class AdminDashboard extends StatelessWidget {
                     Navigator.pop(context);
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => MenuListScreen()),
+                      MaterialPageRoute(builder: (context) => MenuListScreen()),
                     );
                   },
                 ),
@@ -59,15 +59,27 @@ class AdminDashboard extends StatelessWidget {
                 ),
               ],
             ),
-            ListTile(
+            ExpansionTile(
               title: const Text('Üye Yönetimi'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => RegisterScreen()),
-                );
-              },
+              children: [
+                ListTile(
+                  title: const Text('Üye Listesi'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => UserListScreen()),
+                    );
+                  },
+                ),
+                ListTile(
+                  title: const Text('Yönetim Ayarları'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    // Burada üye yönetim ayarları sayfasına yönlendirme yapılabilir.
+                  },
+                ),
+              ],
             ),
             ListTile(
               title: const Text('Garson Yönetimi'),
