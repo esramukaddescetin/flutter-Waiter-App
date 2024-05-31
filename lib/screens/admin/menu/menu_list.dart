@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:waiter_app/screens/admin/menu/menu_edit.dart';
 
-
 class MenuListScreen extends StatefulWidget {
   @override
   _MenuListScreenState createState() => _MenuListScreenState();
@@ -71,7 +70,7 @@ class _MenuListScreenState extends State<MenuListScreen> {
                         IconButton(
                           icon: const Icon(Icons.delete),
                           onPressed: () {
-                            _deleteMenuItem(item.reference);
+                            _confirmDelete(item.reference);
                           },
                         ),
                       ],
@@ -97,6 +96,33 @@ class _MenuListScreenState extends State<MenuListScreen> {
       groupedItems[category]!.add(item);
     }
     return groupedItems;
+  }
+
+  void _confirmDelete(DocumentReference itemRef) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Silme Onayı'),
+          content: const Text('Bu menü öğesini silmek istediğinize emin misiniz?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('İptal'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _deleteMenuItem(itemRef);
+              },
+              child: const Text('Sil'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _deleteMenuItem(DocumentReference itemRef) {
