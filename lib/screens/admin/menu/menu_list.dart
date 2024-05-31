@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:waiter_app/screens/admin/menu/menu_edit.dart';
+
 
 class MenuListScreen extends StatefulWidget {
   @override
@@ -55,7 +57,15 @@ class _MenuListScreenState extends State<MenuListScreen> {
                         IconButton(
                           icon: const Icon(Icons.edit),
                           onPressed: () {
-                            // Düzenleme işlemleri
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MenuEditScreen(
+                                  itemRef: item.reference,
+                                  itemData: itemData,
+                                ),
+                              ),
+                            );
                           },
                         ),
                         IconButton(
