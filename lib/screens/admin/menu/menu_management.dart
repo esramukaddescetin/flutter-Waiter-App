@@ -5,7 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../my_widgets.dart';
+import '../../../my_widgets.dart';
 
 class MenuManagementScreen extends StatefulWidget {
   @override
@@ -76,7 +76,7 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
       backgroundColor: Colors.blue[100],
       appBar: AppBar(
         backgroundColor: Colors.blueAccent,
-        title: Text(
+        title: const Text(
           'Menü Yönetimi',
           style: TextStyle(
             color: Colors.white,
@@ -101,7 +101,7 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
                     onPressed: () {
                       _getImage();
                     },
-                    child: Text(
+                    child: const Text(
                       'Fotoğraf seç',
                       style: TextStyle(
                         color: Colors.white,
@@ -114,10 +114,10 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       backgroundColor: Colors.blue[200],
-                      minimumSize: Size(double.infinity, 35),
+                      minimumSize: const Size(double.infinity, 35),
                     ),
                   ),
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
                   _image != null
                       ? Image.file(
                           _image!,
@@ -138,7 +138,7 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
                               ],
                             ),
                           ),
-                          child: Center(
+                          child: const Center(
                             child: Icon(
                               Icons.image,
                               size: 80,
@@ -146,7 +146,7 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
                             ),
                           ),
                         ),
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
                   DropdownButtonFormField<String>(
                     value: _selectedCategory,
                     onChanged: (String? value) {
@@ -167,7 +167,7 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
                       );
                     }).toList(),
                     decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.category_outlined),
+                      prefixIcon: const Icon(Icons.category_outlined),
                       labelText: 'Kategori',
                       filled: true,
                       fillColor: Colors.white,
@@ -176,21 +176,21 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
                   inputField(_ingredientsController, Icons.set_meal,
                       'Malzemeler (virgülle ayırın)'),
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
                   inputField(_nameController,
                       Icons.emoji_food_beverage_outlined, 'İsim'),
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
                   inputField(
                       _priceController, Icons.price_change_outlined, 'Fiyat'),
-                  SizedBox(height: 20.0),
+                  const SizedBox(height: 20.0),
                   ElevatedButton(
                     onPressed: () {
                       _uploadImage();
                     },
-                    child: Text(
+                    child: const Text(
                       'Menüye Ekle',
                       style: TextStyle(
                         color: Colors.white,
@@ -204,7 +204,7 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       backgroundColor: Colors.blueAccent[100],
-                      minimumSize: Size(double.infinity, 50),
+                      minimumSize: const Size(double.infinity, 50),
                     ),
                   ),
                 ],
@@ -250,14 +250,14 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Başarılı'),
-          content: Text('Menü öğesi başarıyla eklendi.'),
+          title: const Text('Başarılı'),
+          content: const Text('Menü öğesi başarıyla eklendi.'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('TAMAM'),
+              child: const Text('TAMAM'),
             ),
           ],
         );
@@ -270,14 +270,14 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Hata'),
-          content: Text('Bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.'),
+          title: const Text('Hata'),
+          content: const Text('Bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('TAMAM'),
+              child: const Text('TAMAM'),
             ),
           ],
         );
@@ -290,14 +290,14 @@ class _MenuManagementScreenState extends State<MenuManagementScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Doğrulama Hatası'),
-          content: Text('Lütfen tüm alanları doğru şekilde doldurunuz.'),
+          title: const Text('Doğrulama Hatası'),
+          content: const Text('Lütfen tüm alanları doğru şekilde doldurunuz.'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('TAMAM'),
+              child: const Text('TAMAM'),
             ),
           ],
         );
