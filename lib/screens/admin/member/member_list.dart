@@ -10,7 +10,7 @@ class UserListScreen extends StatelessWidget {
         title: const Text('Kullanıcı Listesi'),
       ),
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('users').snapshots(),
+        stream: FirebaseFirestore.instance.collection('users').where('role', isEqualTo: 'user').snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
