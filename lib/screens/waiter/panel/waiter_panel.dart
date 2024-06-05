@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:waiter_app/screens/waiter/tables.dart';
+import 'package:waiter_app/screens/waiter/panel/tables.dart';
 
 class WaiterPanel extends StatefulWidget {
   @override
@@ -105,67 +105,95 @@ class _WaiterPanelState extends State<WaiterPanel> {
                           }
                         }
 
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    TableDetailsPage(tableNumber: tableNumber),
-                              ),
-                            );
-                          },
-                          child: Stack(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: hasOrderNotification ||
-                                          notificationCount > 0
-                                      ? Colors.red.shade200
-                                      : Colors.green.shade200,
-                                  borderRadius: BorderRadius.circular(12.0),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 2,
-                                      blurRadius: 4,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    'Masa $tableNumber',
-                                    style: const TextStyle(
-                                      fontSize: 24,
-                                      color: Colors.white,
-                                    ),
+                        // 'waiter_requests' koleksiyonunu sorgulayıp masaya ait bildirim olup olmadığını kontrol edelim
+                        return StreamBuilder<QuerySnapshot>(
+                          stream: FirebaseFirestore.instance
+                              .collection('waiter_requests')
+                              .where('tableNumber', isEqualTo: tableNumber)
+                              .snapshots(),
+                          builder: (context, requestSnapshot) {
+                            if (requestSnapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            }
+                            int requestCount = 0;
+                            if (requestSnapshot.hasData) {
+                              for (var request in requestSnapshot.data!.docs) {
+                                final requestData =
+                                    request.data() as Map<String, dynamic>;
+                                final checked = requestData['checked'];
+                                if (checked == null || !(checked as bool)) {
+                                  requestCount++;
+                                }
+                              }
+                            }
+
+                            // Toplam bildirim sayısını hesaplayalım
+                            int totalNotificationCount =
+                                orderCount + notificationCount + requestCount;
+
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => TableDetailsPage(
+                                        tableNumber: tableNumber),
                                   ),
-                                ),
-                              ),
-                              if (notificationCount + orderCount > 0)
-                                Positioned(
-                                  top: 8,
-                                  right: 8,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(4),
-                                    decoration: const BoxDecoration(
-                                      color: Colors.white,
-                                      shape: BoxShape.circle,
+                                );
+                              },
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: totalNotificationCount > 0
+                                          ? Colors.red.shade200
+                                          : Colors.green.shade200,
+                                      borderRadius: BorderRadius.circular(12.0),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.5),
+                                          spreadRadius: 2,
+                                          blurRadius: 4,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
                                     ),
-                                    child: Text(
-                                      (notificationCount + orderCount)
-                                          .toString(),
-                                      style: const TextStyle(
-                                        color: Colors
-                                            .red, // Bildirim sayısı için uygun renk
-                                        fontWeight: FontWeight.bold,
+                                    child: Center(
+                                      child: Text(
+                                        'Masa $tableNumber',
+                                        style: const TextStyle(
+                                          fontSize: 24,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                            ],
-                          ),
+                                  if (totalNotificationCount > 0)
+                                    Positioned(
+                                      top: 8,
+                                      right: 8,
+                                      child: Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Text(
+                                          totalNotificationCount.toString(),
+                                          style: const TextStyle(
+                                            color: Colors
+                                                .red, // Bildirim sayısı için uygun renk
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            );
+                          },
                         );
                       },
                     );

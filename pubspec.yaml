@@ -93,6 +93,10 @@ flutter:
       fonts:
         - asset: assets/fonts/MadimiOne-Regular.ttf
 
+    - family: PermanentMarker
+      fonts:
+        - asset: assets/fonts/PermanentMarker-Regular.ttf
+
 
   #   - family: Schyler
   #     fonts:

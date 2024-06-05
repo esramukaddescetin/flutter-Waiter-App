@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:waiter_app/my_widgets.dart';
+
 import '/services/auth_service.dart';
 import '/utils/locator.dart';
 
@@ -63,7 +64,7 @@ class _TableManagementScreenState extends State<TableManagementScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.lightGreen,
+        backgroundColor: Color(0xFF9C27B0),
         title: const Text(
           'Masa Yönetimi',
           style: TextStyle(color: Colors.white),
@@ -72,8 +73,8 @@ class _TableManagementScreenState extends State<TableManagementScreen> {
       backgroundColor: Colors.grey[200],
       body: Container(
         decoration: WidgetBackcolor(
-          Colors.lightGreen,
-          Colors.grey,
+          Color(0xFF9C27B0),
+          Colors.white38,
         ),
         child: Center(
           child: Padding(
@@ -102,12 +103,13 @@ class _TableManagementScreenState extends State<TableManagementScreen> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: _addTable,
-                      child: Text('KAYDET', style: TextStyle(color: Colors.white)),
+                      child:
+                          Text('KAYDET', style: TextStyle(color: Colors.white)),
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
                         ),
-                        backgroundColor: Colors.lightGreen[700],
+                        backgroundColor: Color(0xFF9C27B0),
                       ),
                     ),
                   ),
@@ -130,12 +132,14 @@ class _TableManagementScreenState extends State<TableManagementScreen> {
                         itemCount: tables.length,
                         itemBuilder: (context, index) {
                           final table = tables[index];
-                          final tableData = table.data() as Map<String, dynamic>;
+                          final tableData =
+                              table.data() as Map<String, dynamic>;
                           final tableNumber = tableData['tableNumber'];
                           return ListTile(
                             title: Text('Masa $tableNumber'),
                             trailing: IconButton(
-                              icon: Icon(Icons.delete, color: Colors.red),
+                              icon:
+                                  Icon(Icons.delete, color: Color(0xFF9C27B0)),
                               onPressed: () => _deleteTable(tableNumber),
                             ),
                           );
