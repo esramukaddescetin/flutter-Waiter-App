@@ -13,7 +13,7 @@ class AuthService {
   Future<void> signUp({
     required String email,
     required String password,
-    required String name,
+    required String name, 
     required String lastname,
     required String phone,
     required List<String> roles, // Kullanıcı rolleri
@@ -51,7 +51,7 @@ class AuthService {
       final UserCredential userCredential = await firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
       String userId = userCredential.user!.uid;
-      print('User ID: $userId');
+
       DocumentSnapshot snapshot = await _firestore
           .collection('users')
           .doc(userCredential.user!.uid)
