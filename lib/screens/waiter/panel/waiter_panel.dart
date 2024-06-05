@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:waiter_app/screens/waiter/panel/tables.dart';
+import 'package:waiter_app/screens/waiter/reservations/reservation_list.dart';
+
 
 class WaiterPanel extends StatefulWidget {
   @override
@@ -20,6 +22,17 @@ class _WaiterPanelState extends State<WaiterPanel> {
             Navigator.pop(context);
           },
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.event, color: Colors.white),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ReservationListPage()),
+              );
+            },
+          ),
+        ],
       ),
       body: Container(
         color: Colors.grey[200],
