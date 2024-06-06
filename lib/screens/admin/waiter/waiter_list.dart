@@ -78,25 +78,25 @@ class WaiterListScreen extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                'Name: $name',
+                                'Ad: $name',
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
                               ),
                               Text(
-                                'Last Name: $lastName',
+                                'Soyad: $lastName',
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
                               ),
                               Text(
-                                'Password: $password',
+                                'Şifre: $password',
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
                               ),
                               Text(
-                                'Phone: $phone',
+                                'Telefon: $phone',
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
@@ -107,7 +107,10 @@ class WaiterListScreen extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
-                                icon: Icon(Icons.edit),
+                                icon: Icon(
+                                  Icons.edit,
+                                  color: Colors.white,
+                                ),
                                 onPressed: () {
                                   Navigator.push(
                                     context,
@@ -121,7 +124,10 @@ class WaiterListScreen extends StatelessWidget {
                                 },
                               ),
                               IconButton(
-                                icon: Icon(Icons.delete),
+                                icon: Icon(
+                                  Icons.delete,
+                                  color: Colors.white,
+                                ),
                                 onPressed: () {
                                   _confirmDeleteWaiter(
                                       context, filteredWaiters[index].id);

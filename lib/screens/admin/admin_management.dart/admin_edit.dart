@@ -1,11 +1,14 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+
+import '../../../my_widgets.dart';
 
 class AdminEditScreen extends StatefulWidget {
   final String adminId;
   final Map<String, dynamic> adminData;
 
-  const AdminEditScreen({Key? key, required this.adminId, required this.adminData})
+  const AdminEditScreen(
+      {Key? key, required this.adminId, required this.adminData})
       : super(key: key);
 
   @override
@@ -49,45 +52,74 @@ class _AdminEditScreenState extends State<AdminEditScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Admin Düzenleme'),
+        title: const Text(
+          'Admin Düzenleme',
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: 'PermanentMarker',
+          ),
+        ),
+        backgroundColor: Color(0xFFFF8088),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextFormField(
-              controller: _usernameController,
-              decoration: const InputDecoration(labelText: 'Kullanıcı Adı'),
+      body: Container(
+        decoration: WidgetBackcolor(
+          const Color(0xFFFF8088),
+          Colors.white38,
+        ),
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                TextFormField(
+                  controller: _usernameController,
+                  decoration: const InputDecoration(labelText: 'Kullanıcı Adı'),
+                ),
+                TextFormField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(labelText: 'Email'),
+                ),
+                TextFormField(
+                  controller: _nameController,
+                  decoration: const InputDecoration(labelText: 'Ad'),
+                ),
+                TextFormField(
+                  controller: _lastNameController,
+                  decoration: const InputDecoration(labelText: 'Soyad'),
+                ),
+                TextFormField(
+                  controller: _passwordController,
+                  decoration: const InputDecoration(labelText: 'Şifre'),
+                ),
+                TextFormField(
+                  controller: _phoneController,
+                  decoration: const InputDecoration(labelText: 'Telefon'),
+                ),
+                const SizedBox(height: 20.0),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: Size(200, 20),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    backgroundColor: Color(0xFFFF8088),
+                  ),
+                  onPressed: () {
+                    _saveChanges();
+                  },
+                  child: const Text(
+                    'Değişiklikleri Kaydet',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'PermanentMarker',
+                      fontSize: 17,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            TextFormField(
-              controller: _emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
-            ),
-            TextFormField(
-              controller: _nameController,
-              decoration: const InputDecoration(labelText: 'İsim'),
-            ),
-            TextFormField(
-              controller: _lastNameController,
-              decoration: const InputDecoration(labelText: 'Soyisim'),
-            ),
-            TextFormField(
-              controller: _passwordController,
-              decoration: const InputDecoration(labelText: 'Şifre'),
-            ),
-            TextFormField(
-              controller: _phoneController,
-              decoration: const InputDecoration(labelText: 'Telefon'),
-            ),
-            const SizedBox(height: 20.0),
-            ElevatedButton(
-              onPressed: () {
-                _saveChanges();
-              },
-              child: const Text('Değişiklikleri Kaydet'),
-            ),
-          ],
+          ),
         ),
       ),
     );

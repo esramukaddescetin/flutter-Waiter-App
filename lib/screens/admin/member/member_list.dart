@@ -77,25 +77,25 @@ class UserListScreen extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                'Name: $name',
+                                'Ad: $name',
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
                               ),
                               Text(
-                                'Last Name: $lastName',
+                                'Soyad: $lastName',
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
                               ),
                               Text(
-                                'Password: $password',
+                                'Şifre: $password',
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
                               ),
                               Text(
-                                'Phone: $phone',
+                                'Telefon: $phone',
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
@@ -106,7 +106,10 @@ class UserListScreen extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
-                                icon: const Icon(Icons.edit),
+                                icon: const Icon(
+                                  Icons.edit,
+                                  color: Color(0xFF9E9D24),
+                                ),
                                 onPressed: () {
                                   Navigator.push(
                                     context,
@@ -120,7 +123,10 @@ class UserListScreen extends StatelessWidget {
                                 },
                               ),
                               IconButton(
-                                icon: const Icon(Icons.delete),
+                                icon: const Icon(
+                                  Icons.delete,
+                                  color: Color(0xFF9E9D24),
+                                ),
                                 onPressed: () {
                                   _confirmDeleteUser(
                                       context, filteredUsers[index].id);

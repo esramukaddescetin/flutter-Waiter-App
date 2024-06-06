@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:waiter_app/screens/waiter/orders/past_orders.dart';
+
 import '../../../my_widgets.dart';
 
 class TableDetailsPage extends StatefulWidget {
@@ -524,6 +525,13 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  fixedSize: Size(230, 20),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  backgroundColor: Color(0xFFEF9A9A),
+                ),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -533,7 +541,14 @@ class _TableDetailsPageState extends State<TableDetailsPage> {
                     ),
                   );
                 },
-                child: const Text('Geçmiş Siparişleri Görüntüle'),
+                child: const Text(
+                  'Geçmiş Siparişleri Görüntüle',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'PermanentMarker',
+                    fontSize: 13,
+                  ),
+                ),
               ),
             ),
           ],

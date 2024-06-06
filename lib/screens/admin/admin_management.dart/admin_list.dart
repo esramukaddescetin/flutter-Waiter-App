@@ -77,25 +77,25 @@ class AdminListScreen extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                'Name: $name',
+                                'Ad: $name',
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
                               ),
                               Text(
-                                'Last Name: $lastName',
+                                'Soyad: $lastName',
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
                               ),
                               Text(
-                                'Password: $password',
+                                'Şifre: $password',
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
                               ),
                               Text(
-                                'Phone: $phone',
+                                'Telefon: $phone',
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
